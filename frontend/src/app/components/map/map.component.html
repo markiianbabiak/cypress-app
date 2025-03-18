@@ -1,0 +1,11 @@
+<app-view-navigation></app-view-navigation>
+<google-map
+  *ngIf="isMapLoaded"
+  height="90vh"
+  width="100%"
+  [center]="center"
+  [zoom]="zoom"
+>
+  <map-marker [position]="markerPosition"></map-marker>
+  <!-- Marker on the map -->
+</google-map>

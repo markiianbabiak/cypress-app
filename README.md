@@ -3,6 +3,7 @@
 ### 1. Install Node.js, Angular, and Redis
 
 - Node:
+macOS:
 ```shell
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
 
@@ -12,6 +13,15 @@ nvm install 22.0.0
 
 node -v # Should print "v22.0.0".
 nvm current # Should print "v22.0.0".
+npm -v # Should print "10.5.1".
+```
+Windows:
+```shell
+winget install Schniz.fnm
+
+fnm install 22.0.0
+
+node -v # Should print "v22.0.0".
 npm -v # Should print "10.5.1".
 ```
 - Angular: `npm install -g @angular/cli `

@@ -1,6 +1,6 @@
 ## Setup
 
-### 1. Install Node.js, Angular, and Redis
+### 1. Install Node.js and Angular
 
 - Node:
 macOS:
@@ -50,7 +50,7 @@ $ npm install
 
 ### 4. Add environment variables
 
-Create a `env.json` file inside the `/frontend` directory (`touch env.json` in your terminal or manually create file using your IDE)
+Create a `env.json` file inside the `/frontend/src` directory (`touch env.json` in your terminal or manually create file using your IDE)
 
 Add the following content into the `env.json` file and replace with your own credentials:
 

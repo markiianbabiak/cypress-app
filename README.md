@@ -3,7 +3,7 @@
 ### 1. Install Node.js, Angular, and Redis
 
 - Node: https://nodejs.org/
-  - Use the v18
+  - Use the v22.0.0
 - Angular: `npm install -g @angular/cli `
 
 ### 2. Clone the repository

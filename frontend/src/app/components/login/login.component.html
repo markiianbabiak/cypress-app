@@ -1,2 +1,28 @@
 <app-view-navigation></app-view-navigation>
+<form (ngSubmit)="onLogin()">
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      autocomplete="username"
+      type="email"
+      name="username"
+      [(ngModel)]="email"
+      required
+    />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input
+      matInput
+      autocomplete="current-password"
+      type="password"
+      name="password"
+      [(ngModel)]="password"
+      required
+    />
+  </mat-form-field>
+  <p *ngIf="invalidCredentials">Invalid email or password!</p>
+  <button type="submit" mat-button>Login</button>
+</form>
 <p>login works!</p>

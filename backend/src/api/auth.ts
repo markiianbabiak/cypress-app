@@ -1,0 +1,65 @@
+import { Router, Request, Response, RequestHandler } from "express";
+import dalUser from "../repository/dalUser";
+import bcrypt from "bcrypt";
+import { addHours, getJWTSecret, userToToken } from "../utils/auth";
+import { sign, verify } from "jsonwebtoken";
+
+const router = Router();
+
+const loginHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(400).end("Email and password are required.");
+    return;
+  }
+
+  const foundUser = await dalUser.findByEmail(email);
+  if (!foundUser) {
+    res.status(404).end("Invalid email. Please try again.");
+    return;
+  }
+
+  const isValidPassword =
+    foundUser && (await bcrypt.compare(password, foundUser.password));
+  if (!isValidPassword) {
+    res.status(403).end("Invalid password. Please try again.");
+    return;
+  }
+
+  const user = userToToken(foundUser!);
+  const token = sign(user, getJWTSecret(), { expiresIn: "5h" });
+  const expiresAt = addHours(5);
+
+  res.status(200).send({ token, user, expiresAt });
+  return;
+};
+
+router.post("/login", loginHandler);
+
+const registerHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const body = req.body;
+
+  const exists = await dalUser.findByEmail(body.email);
+  if (exists) {
+    res.status(400).send({ message: "Email already in use." });
+    return;
+  }
+
+  const savedUser = await dalUser.create(body);
+
+  const user = userToToken(savedUser);
+  const token = sign(user, getJWTSecret(), { expiresIn: "5h" });
+  const expiresAt = addHours(5);
+
+  res.status(200).send({ token, user, expiresAt });
+};
+
+router.post("/register", registerHandler);
+export default router;

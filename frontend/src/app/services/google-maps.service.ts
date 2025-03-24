@@ -11,29 +11,22 @@ export class GoogleMapsService {
   constructor(private http: HttpClient) {}
 
   async loadScript() {
-    await this.loadEnv();
     return new Promise<String>((resolve, reject) => {
       if (window.google) {
         resolve('loaded'); // Google Maps is already loaded
       } else {
-        const script = document.createElement('script');
-        console.log(this.googleMapsApiKey);
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${this.googleMapsApiKey}&libraries=places`;
-        script.async = true;
-        script.onload = () => resolve('loaded');
-        script.onerror = (error) => reject(error);
-        document.head.appendChild(script);
+        this.http.get<{ scriptUrl: string }>('maps/').subscribe(
+          (data) => {
+            const script = document.createElement('script');
+            script.src = data.scriptUrl;
+            script.async = true;
+            script.onload = () => resolve('loaded');
+            script.onerror = (error) => reject(error);
+            document.head.appendChild(script);
+          },
+          (error) => reject('Failed to load maps script from backend')
+        );
       }
     });
-  }
-
-  async loadEnv() {
-    await this.http
-      .get('/env.json')
-      .toPromise()
-      .then((data) => {
-        this.env = data;
-        this.googleMapsApiKey = this.env?.googleMapsApiKey || '';
-      });
   }
 }

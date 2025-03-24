@@ -11,6 +11,9 @@
         },
         "@schematics/angular:service": {
           "path": "src/app/services"
+        },
+        "@schematics/angular:guard": {
+          "path": "src/app/guards"
         }
       },
       "root": "",
@@ -30,9 +33,12 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/env.json"
+              "src/env.json",
+              "src/assets"
             ],
-            "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -86,6 +92,9 @@
               }
             ],
             "styles": ["src/styles.css"],
+            "styles": [
+              "src/styles.css"
+            ],
             "scripts": []
           }
         }

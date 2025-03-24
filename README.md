@@ -50,12 +50,14 @@ $ npm install
 
 ### 4. Add environment variables
 
-Create a `env.json` file inside the `/frontend/src` directory (`touch env.json` in your terminal or manually create file using your IDE)
+Create a `.env` file inside the `/backend` directory (`touch .env` in your terminal or manually create file using your IDE)
 
-Add the following content into the `env.json` file and replace with your own credentials:
+Add the following content into the `.env` file and replace with your own credentials:
 
 ```
-{"googleMapsApiKey": "YOUR_GOOGLE_MAPS_API_KEY"}
+JWT_SECRET=YOUR_JWT_SECRET
+MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
+GOOGLE_MAPS_API=YOUR_GOOGLE_MAPS_API_KEY
 ```
 
 ### 5. Run Application

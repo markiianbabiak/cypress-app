@@ -1,0 +1,48 @@
+<h1 mat-dialog-title>Create Activity</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="outline" style="margin-top: 10px; width: 100%">
+    <mat-label>Report Header</mat-label>
+    <input matInput [(ngModel)]="reportHeader" required />
+    <mat-error *ngIf="reportHeader === ''">Report Header is required</mat-error>
+  </mat-form-field>
+
+  <div>
+    <mat-label>Report Priority: </mat-label>
+    <mat-radio-group [(ngModel)]="reportPriority" required>
+      <mat-radio-button [value]="ReportPriority.LOW">Low</mat-radio-button>
+      <mat-radio-button [value]="ReportPriority.MEDIUM"
+        >Medium</mat-radio-button
+      >
+      <mat-radio-button [value]="ReportPriority.HIGH">High</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Report Type</mat-label>
+    <input matInput [(ngModel)]="reportType" required />
+    <mat-error *ngIf="reportType === ''">Report Type is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Report Description</mat-label>
+    <textarea
+      matInput
+      rows="4"
+      [(ngModel)]="reportDescription"
+      required
+    ></textarea>
+    <mat-error *ngIf="reportDescription === ''"
+      >Report Description is required</mat-error
+    >
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button
+    mat-button
+    (click)="handleCreateReport()"
+    [disabled]="!reportHeader || !reportType || !reportDescription"
+  >
+    Create a Report
+  </button>
+</div>

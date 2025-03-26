@@ -12,7 +12,7 @@ const mapsHandler: RequestHandler = async (
 ): Promise<void> => {
   try {
     // The frontend needs only to know if the script can be loaded.
-    const scriptUrl = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApi}&libraries=places`;
+    const scriptUrl = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApi}&libraries=places,marker`;
 
     // Send back the URL of the script
     res.json({ scriptUrl });

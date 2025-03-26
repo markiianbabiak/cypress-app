@@ -16,6 +16,10 @@ import { APIInterceptor } from './utils/interceptor';
 import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { BrowserModule } from '@angular/platform-browser';
+import {
+  GooglePlaceModule,
+  GooglePlaceDirective,
+} from 'ngx-google-places-autocomplete';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,7 +36,9 @@ export const appConfig: ApplicationConfig = {
       HttpClientModule,
       FormsModule,
       GoogleMapsModule,
-      MatButtonModule
+      MatButtonModule,
+      GooglePlaceModule,
+      GooglePlaceDirective
     ),
   ],
 };

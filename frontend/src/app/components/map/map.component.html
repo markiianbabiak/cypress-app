@@ -1,11 +1,10 @@
 <app-view-navigation></app-view-navigation>
-<google-map
+
+<div #mapRef id="map" class="map-container"></div>
+
+<!-- Autocomplete input for address selection -->
+<app-autocomplete-input
+  class="search-container"
   *ngIf="isMapLoaded"
-  height="90vh"
-  width="100%"
-  [center]="center"
-  [zoom]="zoom"
->
-  <map-marker [position]="markerPosition"></map-marker>
-  <!-- Marker on the map -->
-</google-map>
+  (setAddress)="getAddress($event)"
+></app-autocomplete-input>

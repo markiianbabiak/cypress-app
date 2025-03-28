@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateReportModalComponent } from '../create-report-modal/create-report-modal.component';
 import { ReportService } from '../../services/report.service';
 import CityReport, { ReportType } from '../../models/cityReport';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-map',
@@ -27,6 +28,7 @@ import CityReport, { ReportType } from '../../models/cityReport';
     FormsModule,
     AutocompleteInputComponent,
     ViewNavigationComponent,
+    MatButtonModule,
   ],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
@@ -60,10 +62,14 @@ export class MapComponent implements OnInit {
     await this.loadMap();
     await this.loadReports();
 
+    const headerElement = document.createElement('div');
+    headerElement.innerHTML = `<strong>Create a Report</strong>`;
+    headerElement.style.fontSize = '20px';
+
     this.infoWindow = new google.maps.InfoWindow({
       content: '',
       ariaLabel: 'Location Info',
-      headerContent: 'Create a Report',
+      headerContent: headerElement,
     });
   }
 
@@ -130,11 +136,15 @@ export class MapComponent implements OnInit {
           content: markerContent,
         });
 
+        const headerElement = document.createElement('div');
+        headerElement.innerHTML = `<strong>${report.name}</strong>`;
+        headerElement.style.fontSize = '20px';
+
         // Create an info window for the marker
         const infoWindow = new google.maps.InfoWindow({
+          headerContent: headerElement,
           content: `
           <div>
-          <h3>${report.name}</h3>
           <p><strong>Type:</strong> ${report.type}</p>
           <p><strong>Description:</strong> ${report.description}</p>
           <p><strong>Address:</strong> ${report.location}</p>
@@ -150,7 +160,6 @@ export class MapComponent implements OnInit {
     }
   }
 
-  displayReportsOnMap() {}
   getIconForReportType(type: ReportType): string {
     switch (type) {
       case ReportType.INFRUSTRUCTURE:
@@ -199,41 +208,40 @@ export class MapComponent implements OnInit {
 
       if (formattedAddress) {
         this.addMarker(newLatLng);
-        this.infoWindow.setContent(
-          `<p><strong>Location: </strong>${this.selectedAddress()}</p><button id="createReportBtn">Create a report</button>`
-        );
-        this.infoWindow.open(this.map, this.marker);
-
-        setTimeout(() => {
-          document
-            .getElementById('createReportBtn')
-            ?.addEventListener('click', () => {
-              this.openCreateReportModal();
-            });
-        }, 100);
       }
     }
   }
 
   addMarker(position: { lat: number; lng: number }) {
+    if (this.marker) {
+      this.marker.map = null;
+      this.marker = null;
+    }
+
     this.marker = new google.maps.marker.AdvancedMarkerElement({
       position: position,
       map: this.map,
       gmpClickable: true,
     });
 
-    this.infoWindow.setContent(
-      `<p><strong>Location: </strong>${this.selectedAddress()}</p><button id="createReportBtn">Create a report</button>`
-    );
+    const infoContent = document.createElement('div');
+    infoContent.innerHTML = `<p><strong>Location: </strong>${this.selectedAddress()}</p><button id="createReportBtn">Create a report</button>`;
+
+    this.infoWindow.setContent(infoContent);
     this.infoWindow.open(this.map, this.marker);
 
     setTimeout(() => {
-      document
-        .getElementById('createReportBtn')
-        ?.addEventListener('click', () => {
+      const buttonElement = document.getElementById('createReportBtn');
+      if (buttonElement) {
+        buttonElement.addEventListener('click', () => {
           this.openCreateReportModal();
         });
+      }
     }, 100);
+
+    this.marker.addListener('gmp-click', () => {
+      this.infoWindow.open(this.map, this.marker);
+    });
   }
 
   openCreateReportModal(): void {
@@ -249,6 +257,10 @@ export class MapComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
         await this.reportService.create(result);
+      }
+      if (this.marker) {
+        this.marker.map = null; // Remove the marker from the map
+        this.marker = null; // Clear the marker reference
       }
     });
   }

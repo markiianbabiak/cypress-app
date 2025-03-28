@@ -39,6 +39,10 @@ export class AutocompleteInputComponent {
       this.addresstext.nativeElement,
       {
         componentRestrictions: { country: 'CA' },
+        bounds: new google.maps.LatLngBounds(
+          new google.maps.LatLng(43.581024, -79.639319), // Southwest corner of Toronto
+          new google.maps.LatLng(43.855457, -79.116897) // Northeast corner of Toronto
+        ),
         types: ['address'], // 'establishment' / 'address' / 'geocode'
       }
     );

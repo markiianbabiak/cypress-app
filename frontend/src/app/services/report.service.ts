@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import CityReport from '../models/cityReport';
-import { last, lastValueFrom } from 'rxjs';
+import { last, lastValueFrom, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,13 @@ export class ReportService {
   }
 
   async getAll(): Promise<CityReport[] | undefined> {
-    return lastValueFrom(this.http.get<CityReport[]>('report/all')).catch(
+    return lastValueFrom(this.http.get<CityReport[]>('report/all/')).catch(
+      () => undefined
+    );
+  }
+
+  async getAllActive(): Promise<Object | undefined> {
+    return lastValueFrom(this.http.get<Object>('report/all/active/')).catch(
       () => undefined
     );
   }

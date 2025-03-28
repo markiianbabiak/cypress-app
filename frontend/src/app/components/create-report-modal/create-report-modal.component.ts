@@ -14,7 +14,12 @@ import { generateUniqueID } from '../../utils/Utils';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
-import { ReportPriority } from '../../models/cityReport';
+import {
+  ReportPriority,
+  ReportStatus,
+  ReportType,
+} from '../../models/cityReport';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-create-report-modal',
@@ -26,6 +31,7 @@ import { ReportPriority } from '../../models/cityReport';
     MatInputModule,
     MatButtonModule,
     MatRadioModule,
+    MatSelectModule,
   ],
   templateUrl: './create-report-modal.component.html',
   styleUrl: './create-report-modal.component.css',
@@ -34,10 +40,12 @@ export class CreateReportModalComponent {
   reportHeader!: string;
   user!: AuthUser | null;
   reportDescription!: string;
-  reportType!: string;
+  reportType!: ReportType;
+  otherReportType: string = '';
   reportPriority: ReportPriority = ReportPriority.LOW;
   time!: any;
   ReportPriority: typeof ReportPriority = ReportPriority;
+  ReportType: typeof ReportType = ReportType;
 
   constructor(
     private userService: UserService,
@@ -57,18 +65,38 @@ export class CreateReportModalComponent {
       })
       .catch((error) => console.error('Error fetching time:', error));
 
-    const newReport = {
-      reportID: generateUniqueID(),
-      name: this.reportHeader,
-      type: this.reportType,
-      priority: this.reportPriority,
-      description: this.reportDescription,
-      userID: this.user?.userID,
-      location: this.data.location,
-      submittedAt: this.time,
-    };
-
-    this.dialogRef.close(newReport);
+    if (this.otherReportType) {
+      const newReport = {
+        reportID: generateUniqueID(),
+        name: this.reportHeader,
+        type: this.reportType,
+        other_type: this.otherReportType,
+        status: ReportStatus.PENDING,
+        priority: this.reportPriority,
+        description: this.reportDescription,
+        userID: this.user?.userID,
+        location: this.data.location,
+        latitude: this.data.latitude,
+        longitude: this.data.longitude,
+        submittedAt: this.time,
+      };
+      this.dialogRef.close(newReport);
+    } else {
+      const newReport = {
+        reportID: generateUniqueID(),
+        name: this.reportHeader,
+        type: this.reportType,
+        status: ReportStatus.PENDING,
+        priority: this.reportPriority,
+        description: this.reportDescription,
+        userID: this.user?.userID,
+        location: this.data.location,
+        latitude: this.data.latitude,
+        longitude: this.data.longitude,
+        submittedAt: this.time,
+      };
+      this.dialogRef.close(newReport);
+    }
   }
 
   closeModal(): void {

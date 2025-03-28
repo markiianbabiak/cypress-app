@@ -17,4 +17,16 @@ const createReportHandler: RequestHandler = async (
 
 router.post("/", createReportHandler);
 
+const getAllActiveHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const reports = await dalReport.getAllActive();
+
+  res.status(200).send({ reports });
+  return;
+};
+
+router.get("/all/active/", getAllActiveHandler);
+
 export default router;

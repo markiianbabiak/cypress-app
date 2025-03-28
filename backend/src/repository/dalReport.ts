@@ -9,8 +9,20 @@ export const create = async (report: ReportModel) => {
   }
 };
 
+export const getAllActive = async () => {
+  try {
+    const statuses = ["PENDING", "IN_PROGRESS"];
+    const reports = await Report.find({ status: { $in: statuses } });
+    console.log(reports);
+    return reports;
+  } catch (err) {
+    throw new Error(JSON.stringify(err, null, " "));
+  }
+};
+
 const dalReport = {
   create,
+  getAllActive,
 };
 
 export default dalReport;

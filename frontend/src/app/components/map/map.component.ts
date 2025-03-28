@@ -4,6 +4,7 @@ import {
   OnInit,
   ViewChild,
   WritableSignal,
+  provideExperimentalZonelessChangeDetection,
   signal,
 } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
@@ -15,6 +16,7 @@ import { ViewNavigationComponent } from '../view-navigation/view-navigation.comp
 import { MatDialog } from '@angular/material/dialog';
 import { CreateReportModalComponent } from '../create-report-modal/create-report-modal.component';
 import { ReportService } from '../../services/report.service';
+import CityReport, { ReportType } from '../../models/cityReport';
 
 @Component({
   selector: 'app-map',
@@ -34,6 +36,8 @@ export class MapComponent implements OnInit {
 
   zoom = 16;
   selectedAddress: WritableSignal<string | null> = signal(null); // Nullable address
+  latitude: number | undefined = undefined;
+  longitude: number | undefined = undefined;
   center: WritableSignal<{ lat: number; lng: number }> = signal({
     lat: 43.65883681584811,
     lng: -79.37932890768772,
@@ -43,6 +47,9 @@ export class MapComponent implements OnInit {
   infoWindow!: google.maps.InfoWindow;
   map!: google.maps.Map;
   marker!: google.maps.marker.AdvancedMarkerElement | null; // Nullable marker
+
+  reports: CityReport[] | undefined;
+
   constructor(
     private googleMapsService: GoogleMapsService,
     private reportService: ReportService,
@@ -51,6 +58,7 @@ export class MapComponent implements OnInit {
 
   async ngOnInit() {
     await this.loadMap();
+    await this.loadReports();
 
     this.infoWindow = new google.maps.InfoWindow({
       content: '',
@@ -87,6 +95,84 @@ export class MapComponent implements OnInit {
     console.log('Map initialized:', this.map);
   }
 
+  async loadReports() {
+    const results = await this.reportService.getAllActive();
+    if (!results) {
+      console.error('No report loaded');
+      return;
+    }
+    this.reports = results['reports'];
+    if (!this.map) {
+      console.error('Map is not initialized');
+      return;
+    }
+    if (!this.reports) {
+      console.error('No report loaded');
+    } else {
+      for (const report of this.reports) {
+        console.log(report);
+        const position = { lat: report.latitude, lng: report.longitude };
+
+        const markerContent = document.createElement('div');
+        markerContent.className = 'custom-marker';
+
+        // Add the mat-icon element
+        markerContent.innerHTML = `
+      <i class="material-icons" style="font-size: 40px; color: #ff5722;">
+  ${this.getIconForReportType(report.type)}
+</i>
+    `;
+
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          position: position,
+          map: this.map,
+          gmpClickable: true,
+          content: markerContent,
+        });
+
+        // Create an info window for the marker
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+          <div>
+          <h3>${report.name}</h3>
+          <p><strong>Type:</strong> ${report.type}</p>
+          <p><strong>Description:</strong> ${report.description}</p>
+          <p><strong>Address:</strong> ${report.location}</p>
+          <p><strong>Status:</strong> ${report.status}</p>
+          <p><strong>Submitted At:</strong> ${report.submittedAt}</p>
+        </div>
+      `,
+        });
+        marker.addListener('gmp-click', () => {
+          infoWindow.open(this.map, marker);
+        });
+      }
+    }
+  }
+
+  displayReportsOnMap() {}
+  getIconForReportType(type: ReportType): string {
+    switch (type) {
+      case ReportType.INFRUSTRUCTURE:
+        return 'construction';
+      case ReportType.TRAFFIC_AND_TRANSPORTATION:
+        return 'directions_car';
+      case ReportType.PUBLIC_UTILITIES_AND_SERVICES:
+        return 'electrical_services';
+      case ReportType.PUBLIC_SAFETY:
+        return 'security';
+      case ReportType.ANIMAL_AND_WILDLIFE:
+        return 'pets';
+      case ReportType.PUBLIC_SPACES_AND_PARKS:
+        return 'park';
+      case ReportType.WASTE_MANAGEMENT:
+        return 'recycling';
+      case ReportType.WEATHER_AND_NATURAL_DISASTERS:
+        return 'thunderstorm';
+      default:
+        return 'report_problem'; // Default Material icon
+    }
+  }
   getAddress(event: Object) {
     console.log(event);
     const place = event as google.maps.places.PlaceResult;
@@ -102,8 +188,10 @@ export class MapComponent implements OnInit {
     this.selectedAddress.set(formattedAddress);
 
     const location = place.geometry.location;
-    console.log(location);
+
     if (location) {
+      this.longitude = location.lng();
+      this.latitude = location.lat();
       const newLatLng = { lat: location.lat(), lng: location.lng() };
 
       this.center.set(newLatLng);
@@ -134,18 +222,28 @@ export class MapComponent implements OnInit {
       gmpClickable: true,
     });
 
-    this.marker.addListener('gmp-click', () => {
-      this.infoWindow.setContent(
-        `<p><strong>Location: </strong>${this.selectedAddress()}</p><button type="button" (click)="openCreateReportModal()">Create a report</button>`
-      );
-      this.infoWindow.open(this.map, this.marker);
-    });
+    this.infoWindow.setContent(
+      `<p><strong>Location: </strong>${this.selectedAddress()}</p><button id="createReportBtn">Create a report</button>`
+    );
+    this.infoWindow.open(this.map, this.marker);
+
+    setTimeout(() => {
+      document
+        .getElementById('createReportBtn')
+        ?.addEventListener('click', () => {
+          this.openCreateReportModal();
+        });
+    }, 100);
   }
 
   openCreateReportModal(): void {
     const dialogRef = this.dialog.open(CreateReportModalComponent, {
       width: '400px', // Set width if needed
-      data: { location: this.selectedAddress() },
+      data: {
+        location: this.selectedAddress(),
+        latitude: this.latitude,
+        longitude: this.longitude,
+      },
     });
 
     dialogRef.afterClosed().subscribe(async (result) => {

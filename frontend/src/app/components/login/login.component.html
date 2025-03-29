@@ -1,4 +1,5 @@
 <app-view-navigation></app-view-navigation>
+<div id="login-container">
 <form (ngSubmit)="onLogin()">
   <mat-form-field>
     <mat-label>Email</mat-label>
@@ -25,4 +26,5 @@
   <p *ngIf="invalidCredentials">Invalid email or password!</p>
   <button type="submit" mat-button>Login</button>
 </form>
-<p>login works!</p>
+</div>
+

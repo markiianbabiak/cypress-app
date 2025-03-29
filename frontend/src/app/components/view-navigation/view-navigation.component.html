@@ -1,6 +1,9 @@
 <nav>
-  <a [routerLink]="['/']">Login</a> | <a [routerLink]="['/map']">Map</a> |
-  <a [routerLink]="['/register']">Register</a> |
-  <a [routerLink]="['/reports']">Reports</a> |
+  <link rel="stylesheet" href="view-navigation.component.css">
+  <img src="assets/logo.svg" alt=""> 
+
+  <a [routerLink]="['/']">Login</a>  <a [routerLink]="['/map']">Map</a> 
+  <a [routerLink]="['/register']">Register</a> 
+  <a [routerLink]="['/reports']">Reports</a> 
   <button type="button" (click)="logout()" *ngIf="user">Log Out</button>
 </nav>

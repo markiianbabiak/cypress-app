@@ -18,6 +18,8 @@ import { CreateReportModalComponent } from '../create-report-modal/create-report
 import { ReportService } from '../../services/report.service';
 import CityReport, { ReportType } from '../../models/cityReport';
 import { MatButtonModule } from '@angular/material/button';
+import { UserService } from '../../services/user.service';
+import { AuthUser } from '../../models/user';
 
 @Component({
   selector: 'app-map',
@@ -44,6 +46,9 @@ export class MapComponent implements OnInit {
     lat: 43.65883681584811,
     lng: -79.37932890768772,
   });
+  user!: AuthUser | null;
+
+  mapClickListener: google.maps.MapsEventListener | null = null;
 
   isMapLoaded: boolean = false;
   infoWindow!: google.maps.InfoWindow;
@@ -55,11 +60,14 @@ export class MapComponent implements OnInit {
   constructor(
     private googleMapsService: GoogleMapsService,
     private reportService: ReportService,
+    private userService: UserService,
     public dialog: MatDialog
   ) {}
 
   async ngOnInit() {
     await this.loadMap();
+
+    this.user = this.userService.user!;
     await this.loadReports();
 
     const headerElement = document.createElement('div');
@@ -122,12 +130,19 @@ export class MapComponent implements OnInit {
         const markerContent = document.createElement('div');
         markerContent.className = 'custom-marker';
 
-        // Add the mat-icon element
-        markerContent.innerHTML = `
+        if (report.userID === this.user?.userID) {
+          markerContent.innerHTML = `
+          <i class="material-icons" style="font-size: 40px; color: #00008B;">
+      ${this.getIconForReportType(report.type)}
+    </i>
+        `;
+        } else {
+          markerContent.innerHTML = `
       <i class="material-icons" style="font-size: 40px; color: #ff5722;">
   ${this.getIconForReportType(report.type)}
 </i>
     `;
+        }
 
         const marker = new google.maps.marker.AdvancedMarkerElement({
           position: position,
@@ -182,6 +197,7 @@ export class MapComponent implements OnInit {
         return 'report_problem'; // Default Material icon
     }
   }
+
   getAddress(event: Object) {
     console.log(event);
     const place = event as google.maps.places.PlaceResult;
@@ -241,6 +257,59 @@ export class MapComponent implements OnInit {
 
     this.marker.addListener('gmp-click', () => {
       this.infoWindow.open(this.map, this.marker);
+    });
+  }
+
+  activateMapClickListener() {
+    if (!this.map) {
+      console.error('Map is not initialized');
+      return;
+    }
+
+    this.mapClickListener = this.map.addListener(
+      'click',
+      async (event: google.maps.MapMouseEvent) => {
+        if (!event.latLng) return;
+
+        this.longitude = event.latLng.lng();
+        this.latitude = event.latLng.lat();
+
+        const clickedPosition = {
+          lat: event.latLng.lat(),
+          lng: event.latLng.lng(),
+        };
+
+        this.selectedAddress.set(
+          await this.getAddressFromCoordinates(clickedPosition)
+        );
+        this.addMarker(clickedPosition);
+      }
+    );
+  }
+
+  disactivateMapClickListener() {
+    if (this.mapClickListener) {
+      google.maps.event.removeListener(this.mapClickListener);
+      this.mapClickListener = null;
+    } else {
+      console.warn('No active map click listener to deactivate');
+    }
+  }
+
+  async getAddressFromCoordinates(position: {
+    lat: number;
+    lng: number;
+  }): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ location: position }, (results, status) => {
+        if (status === 'OK' && results && results[0]) {
+          resolve(results[0].formatted_address);
+        } else {
+          console.error('Geocoder failed due to:', status);
+          resolve('Address not found');
+        }
+      });
     });
   }
 

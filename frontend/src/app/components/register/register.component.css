@@ -16,10 +16,11 @@
 }
 
 .select-container {
+  margin-top: 50px;
+  margin-bottom: 100px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   flex-wrap: wrap;
-  margin-bottom: 3em;
 }
 
 .active {
@@ -27,9 +28,40 @@
 }
 
 .enabled {
-  background-color: #6c63ff;
+  background-color: #00408C;
+  padding: 5px;
+  color: white;
 }
 
 .disabled {
   background-color: #9a9aac;
+}
+.header{
+  text-align: center;
+}
+h2{
+  text-align: center;
+}
+
+.form{
+  height: 85%;
+}
+
+.form{
+  text-align: center;
+    width: 500px;
+    height: 70%;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body{
+  background-color: #00408C;
+  display: flex;
+  justify-content: center;
+    height: 94%;
+    align-items: center;
+
 }

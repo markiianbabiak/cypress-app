@@ -28,10 +28,23 @@ export const getAllByUser = async (userID: string) => {
   }
 };
 
+export const update = async (
+  reportID: string,
+  report: Partial<ReportModel>
+) => {
+  try {
+    const savedReport = await Report.updateOne({ reportID: reportID }, report);
+    return savedReport;
+  } catch (err) {
+    throw new Error(JSON.stringify(err, null, " "));
+  }
+};
+
 const dalReport = {
   create,
   getAllActive,
   getAllByUser,
+  update,
 };
 
 export default dalReport;

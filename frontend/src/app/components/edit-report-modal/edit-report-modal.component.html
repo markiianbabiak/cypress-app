@@ -1,0 +1,86 @@
+<h1 mat-dialog-title>Edit a Report</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="outline" style="margin-top: 10px; width: 100%">
+    <mat-label>Report Header</mat-label>
+    <input matInput [(ngModel)]="reportHeader" required />
+    <mat-error *ngIf="reportHeader === ''">Report Header is required</mat-error>
+  </mat-form-field>
+
+  <div>
+    <mat-label>Report Priority: </mat-label>
+    <mat-radio-group [(ngModel)]="reportPriority" required>
+      <mat-radio-button [value]="ReportPriority.LOW">Low</mat-radio-button>
+      <mat-radio-button [value]="ReportPriority.MEDIUM"
+        >Medium</mat-radio-button
+      >
+      <mat-radio-button [value]="ReportPriority.HIGH">High</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <mat-form-field appearance="outline" style="margin-top: 10px; width: 100%">
+    <mat-label>Report Type</mat-label>
+    <mat-select [(ngModel)]="reportType" required>
+      <mat-option [value]="ReportType.INFRUSTRUCTURE"
+        >Infrustructure Issue</mat-option
+      >
+      <mat-option [value]="ReportType.WASTE_MANAGEMENT"
+        >Waste Management Issue</mat-option
+      >
+      <mat-option [value]="ReportType.PUBLIC_SAFETY"
+        >Public Safety Issue</mat-option
+      >
+      <mat-option [value]="ReportType.PUBLIC_UTILITIES_AND_SERVICES"
+        >Public Utilities and Services Issue</mat-option
+      >
+      <mat-option [value]="ReportType.PUBLIC_SPACES_AND_PARKS"
+        >Public Spaces and Parks Issue</mat-option
+      >
+      <mat-option [value]="ReportType.TRAFFIC_AND_TRANSPORTATION"
+        >Traffic and Transportation Issue</mat-option
+      >
+      <mat-option [value]="ReportType.WEATHER_AND_NATURAL_DISASTERS"
+        >Weather or Natural Disasters Issue</mat-option
+      >
+      <mat-option [value]="ReportType.ANIMAL_AND_WILDLIFE"
+        >Animal and Wildlife Issue</mat-option
+      >
+      <mat-option [value]="ReportType.OTHER">Other Issue</mat-option>
+    </mat-select>
+    <mat-error *ngIf="!reportType">Report Type is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="reportType === ReportType.OTHER"
+    appearance="outline"
+    style="width: 100%"
+  >
+    <mat-label>Other Report Type</mat-label>
+    <input matInput [(ngModel)]="otherReportType" required />
+    <mat-error *ngIf="!reportType">Report Type is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Report Description</mat-label>
+    <textarea
+      matInput
+      rows="4"
+      [(ngModel)]="reportDescription"
+      required
+    ></textarea>
+    <mat-error *ngIf="reportDescription === ''"
+      >Report Description is required</mat-error
+    >
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button
+    mat-button
+    (click)="handleEditReport()"
+    [disabled]="
+      !reportHeader || !reportType || !reportDescription || !noChanges
+    "
+  >
+    Submit the Changes
+  </button>
+</div>

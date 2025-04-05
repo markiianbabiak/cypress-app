@@ -42,4 +42,18 @@ const getAllByUser: RequestHandler = async (
 
 router.get("/user/:userID", getAllByUser);
 
+const updateReportHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const report: Partial<ReportModel> = req.body;
+  const reportID: string = req.params.reportID;
+  const savedReport = await dalReport.update(reportID, report);
+
+  res.status(200).send({ savedReport });
+  return;
+};
+
+router.post("/:reportID", updateReportHandler);
+
 export default router;

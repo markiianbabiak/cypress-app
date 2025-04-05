@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { UserService } from '../../services/user.service';
 import { AuthUser } from '../../models/user';
+import { EditReportModalComponent } from '../edit-report-modal/edit-report-modal.component';
 
 @Component({
   selector: 'app-myreports',
@@ -60,12 +61,8 @@ export class MyreportsComponent {
       return;
     }
     this.reports = results['reports'];
-    console.log(this.reports);
     if (this.reports) {
       this.dataSource = new MyReportsDataSource(this.reports);
-      console.log(this.dataSource);
-
-      // Trigger change detection to ensure ViewChild bindings are updated
       this.cdr.detectChanges();
       this.initializeTable();
     }
@@ -74,6 +71,30 @@ export class MyreportsComponent {
   viewReport(row) {
     const dialogRef = this.dialog.open(ViewReportModalComponent, {
       data: row,
+    });
+  }
+
+  editReport(row) {
+    const dialogRef = this.dialog.open(EditReportModalComponent, {
+      width: '400px',
+      data: row,
+    });
+
+    dialogRef.afterClosed().subscribe(async (result) => {
+      this.reportService.update(row.reportID, result);
+      if (this.user) {
+        const results = await this.reportService.getByUser(this.user.userID);
+        if (!results) {
+          console.error('No report loaded');
+          return;
+        }
+        this.reports = results['reports'];
+        if (this.reports) {
+          this.dataSource = new MyReportsDataSource(this.reports);
+          this.cdr.detectChanges();
+          this.initializeTable();
+        }
+      }
     });
   }
 
@@ -94,10 +115,6 @@ export class MyreportsComponent {
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.table.dataSource = this.dataSource;
-
-      console.log('Paginator:', this.paginator);
-      console.log('Sort:', this.sort);
-      console.log('DataSource Data:', this.dataSource.data); // Debugging
     } else {
       console.error('DataSource is still undefined after retrying.');
     }

@@ -1,4 +1,22 @@
-<app-view-navigation></app-view-navigation>
+<app-view-navigation
+  ><button
+    *ngIf="mapClickListener == null"
+    mat-flat-button
+    class="nav-button"
+    color="primary"
+    (click)="activateMapClickListener()"
+  >
+    Select on the Map
+  </button>
+  <button
+    *ngIf="mapClickListener"
+    mat-stroked-button
+    class="nav-cancel-button"
+    (click)="disactivateMapClickListener()"
+  >
+    Cancel
+  </button></app-view-navigation
+>
 
 <div #mapRef id="map" class="map-container"></div>
 

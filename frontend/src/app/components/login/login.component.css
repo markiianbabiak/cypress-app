@@ -1,86 +1,85 @@
-
 nav {
-    position: fixed; /* Use fixed if you want it to stay while scrolling */
-    top: 0;
-    width: 100%;
-    height: 60px; /* Adjust as needed */
-    background-color: white;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  nav img {
-    width: 40px;
-    height: auto;
-    margin-right: 10px;
-  }
-  
-  nav div {
-    font-weight: bold;
-    font-style: italic;
-    font-size: 1.2em;
-  }
-  
+  position: fixed; /* Use fixed if you want it to stay while scrolling */
+  top: 0;
+  width: 100%;
+  height: 60px; /* Adjust as needed */
+  background-color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+nav img {
+  width: 40px;
+  height: auto;
+  margin-right: 10px;
+}
+
+nav div {
+  font-weight: bold;
+  font-style: italic;
+  font-size: 1.2em;
+}
+
 form {
-    width: 100%;
-    max-width: 400px;  /* Limit the width */
-    margin: 30px auto; /* Center align */
-    padding: 20px;
-    background-color: #f8f8f8;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
+  width: 100%;
+  max-width: 400px; /* Limit the width */
+  margin: 30px auto; /* Center align */
+  padding: 20px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 mat-form-field {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  
+  width: 100%;
+  margin-bottom: 10px;
+}
+
 mat-form-field mat-label {
-    font-weight: 600;
-    color: #333;
-  }
-  
+  font-weight: 600;
+  color: #333;
+}
+
 input {
-    font-size: 1rem;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 100%;
-  }
-  
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
 button {
-    width: 100%;
-    padding: 12px;
-    background-color: #00408C; /* Government of Canada blue */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: darkblue; /* Slightly darker blue on hover */
-  }
-  
+  width: 100%;
+  padding: 12px;
+  background-color: #00408c; /* Government of Canada blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: darkblue; /* Slightly darker blue on hover */
+}
+
 p {
-    color: #D8000C; /* Red for error messages */
-    font-size: 0.9em;
-    margin-top: 10px;
-  }
-  
-#login-container{
-    display: flex;
-    justify-content: center;  /* Center horizontally */
-    align-items: center;      /* Center vertically */
-    height: 94%;  
-    background-image: url("/assets/cntower-skyline.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
+  color: #d8000c; /* Red for error messages */
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+
+#login-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 94%;
+  background-image: url("/assets/cntower-skyline.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }

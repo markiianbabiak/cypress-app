@@ -5,6 +5,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { ErrorComponent } from './components/error/error.component';
 import { authGuard } from './guards/auth.guard';
 import { ReportsComponent } from './components/reports/reports.component';
+import { MyreportsComponent } from './components/myreports/myreports.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 const routeConfig: Routes = [
   { path: '', component: LoginComponent },
@@ -12,6 +14,16 @@ const routeConfig: Routes = [
   { path: 'map', component: MapComponent, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'reports', component: ReportsComponent, canActivate: [authGuard] },
+  {
+    path: 'myreports',
+    component: MyreportsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
+    canActivate: [authGuard],
+  },
   { path: 'error', component: ErrorComponent },
   { path: '**', redirectTo: 'error' },
 ];

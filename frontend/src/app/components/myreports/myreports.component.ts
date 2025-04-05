@@ -8,7 +8,7 @@ import {
 import { MatTableModule, MatTable } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
-import { ReportsDataSource } from './reports-datasource';
+import { MyReportsDataSource } from './myreports-datasource';
 import CityReport, { ReportType } from '../../models/cityReport';
 import { ReportService } from '../../services/report.service';
 import { ViewNavigationComponent } from '../view-navigation/view-navigation.component';
@@ -18,11 +18,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ViewReportModalComponent } from '../view-report-modal/view-report-modal.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { UserService } from '../../services/user.service';
+import { AuthUser } from '../../models/user';
 
 @Component({
-  selector: 'app-reports',
-  templateUrl: './reports.component.html',
-  styleUrl: './reports.component.css',
+  selector: 'app-myreports',
   imports: [
     MatTableModule,
     MatPaginatorModule,
@@ -32,24 +32,29 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatButtonModule,
   ],
+  templateUrl: './myreports.component.html',
+  styleUrl: './myreports.component.css',
 })
-export class ReportsComponent implements OnInit {
+export class MyreportsComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<CityReport>;
 
   reportType: typeof ReportType = ReportType;
   reports: CityReport[] | undefined;
-  dataSource!: ReportsDataSource;
+  dataSource!: MyReportsDataSource;
+  user: AuthUser | undefined;
 
   constructor(
     private reportService: ReportService,
     private cdr: ChangeDetectorRef,
+    private userService: UserService,
     public dialog: MatDialog
   ) {}
 
   async ngOnInit(): Promise<void> {
-    const results = await this.reportService.getAllActive();
+    this.user = await this.userService.user!;
+    const results = await this.reportService.getByUser(this.user.userID);
     if (!results) {
       console.error('No report loaded');
       return;
@@ -57,7 +62,7 @@ export class ReportsComponent implements OnInit {
     this.reports = results['reports'];
     console.log(this.reports);
     if (this.reports) {
-      this.dataSource = new ReportsDataSource(this.reports);
+      this.dataSource = new MyReportsDataSource(this.reports);
       console.log(this.dataSource);
 
       // Trigger change detection to ensure ViewChild bindings are updated

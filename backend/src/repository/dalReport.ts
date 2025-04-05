@@ -20,9 +20,19 @@ export const getAllActive = async () => {
   }
 };
 
+export const getAllByUser = async (userID: string) => {
+  try {
+    const reports = await Report.find({ userID: userID });
+    return reports;
+  } catch (err) {
+    throw new Error(JSON.stringify(err, null, " "));
+  }
+};
+
 const dalReport = {
   create,
   getAllActive,
+  getAllByUser,
 };
 
 export default dalReport;

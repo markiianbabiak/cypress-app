@@ -1,0 +1,26 @@
+<button
+  navbarMenu
+  mat-icon-button
+  [matMenuTriggerFor]="navbarMenu"
+  matTooltip="Your Profile"
+>
+  <mat-icon style="color: white">account_circle</mat-icon>
+</button>
+<mat-menu #navbarMenu="matMenu">
+  <div class="user-info" style="text-align: center; padding: 10px">
+    <mat-icon style="font-size: 48px; width: 48px; height: 48px"
+      >account_circle</mat-icon
+    >
+    <h3 style="margin: 8px 0">{{ user.username }}</h3>
+    <p style="margin: 4px 0; color: gray">{{ user.role }}</p>
+  </div>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="gotoMyReports()">
+    <mat-icon>article</mat-icon>
+    My Reports
+  </button>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Log Out
+  </button>
+</mat-menu>

@@ -18,6 +18,8 @@ import { CreateReportModalComponent } from '../create-report-modal/create-report
 import { ReportService } from '../../services/report.service';
 import CityReport, { ReportType } from '../../models/cityReport';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthUser } from '../../models/user';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-map',
@@ -51,16 +53,20 @@ export class MapComponent implements OnInit {
   marker!: google.maps.marker.AdvancedMarkerElement | null; // Nullable marker
 
   reports: CityReport[] | undefined;
+  user: AuthUser | undefined;
 
   constructor(
     private googleMapsService: GoogleMapsService,
     private reportService: ReportService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private userService: UserService
   ) {}
 
   async ngOnInit() {
     await this.loadMap();
     await this.loadReports();
+
+    this.user = this.userService.user!;
 
     const headerElement = document.createElement('div');
     headerElement.innerHTML = `<strong>Create a Report</strong>`;
@@ -116,7 +122,6 @@ export class MapComponent implements OnInit {
       console.error('No report loaded');
     } else {
       for (const report of this.reports) {
-        console.log(report);
         const position = { lat: report.latitude, lng: report.longitude };
 
         const markerContent = document.createElement('div');
@@ -257,10 +262,60 @@ export class MapComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
         await this.reportService.create(result);
-      }
-      if (this.marker) {
-        this.marker.map = null; // Remove the marker from the map
-        this.marker = null; // Clear the marker reference
+        this.reports?.push(result);
+        const position = { lat: result.latitude, lng: result.longitude };
+
+        const markerContent = document.createElement('div');
+        markerContent.className = 'custom-marker';
+
+        if (result.userID === this.user?.userID) {
+          markerContent.innerHTML = `
+          <i class="material-icons" style="font-size: 40px; color: #00008B;">
+      ${this.getIconForReportType(result.type)}
+    </i>
+        `;
+        } else {
+          markerContent.innerHTML = `
+      <i class="material-icons" style="font-size: 40px; color: #ff5722;">
+  ${this.getIconForReportType(result.type)}
+</i>
+    `;
+        }
+
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          position: position,
+          map: this.map,
+          gmpClickable: true,
+          content: markerContent,
+        });
+
+        const headerElement = document.createElement('div');
+        headerElement.innerHTML = `<strong>${result.name}</strong>`;
+        headerElement.style.fontSize = '20px';
+
+        // Create an info window for the marker
+        const infoWindow = new google.maps.InfoWindow({
+          headerContent: headerElement,
+          content: `
+          <div>
+          <p><strong>Type:</strong> ${result.type}</p>
+          <p><strong>Description:</strong> ${result.description}</p>
+          <p><strong>Address:</strong> ${result.location}</p>
+          <p><strong>Status:</strong> ${result.status}</p>
+          <p><strong>Submitted At:</strong> ${result.submittedAt}</p>
+        </div>
+      `,
+        });
+        marker.addListener('gmp-click', () => {
+          infoWindow.open(this.map, marker);
+        });
+        if (this.marker) {
+          this.marker.map = null; // Remove the marker from the map
+          this.marker = null; // Clear the marker reference
+        }
+        if (this.mapClickListener) {
+          this.disactivateMapClickListener();
+        }
       }
     });
   }

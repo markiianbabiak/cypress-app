@@ -1,23 +1,26 @@
 nav {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: darkblue;
-    padding: 10px ;
-    font-family: Helvetica, sans-serif;
-  }
-  
-nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 550;
-    padding: 5px;
-  }
-  
-nav a:hover {
-    text-decoration: underline;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: darkblue;
+  padding: 10px;
+  font-family: Helvetica, sans-serif;
 }
-img{
-    width: 95px;
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 550;
+  padding: 5px;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+img {
+  width: 95px;
+}
+app-toolbar-menu {
+  margin-left: auto; /* Pushes the toolbar menu to the right */
 }

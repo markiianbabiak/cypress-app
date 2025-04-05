@@ -29,4 +29,17 @@ const getAllActiveHandler: RequestHandler = async (
 
 router.get("/all/active/", getAllActiveHandler);
 
+const getAllByUser: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const userID: string = req.params.userID;
+  const reports = await dalReport.getAllByUser(userID);
+
+  res.status(200).send({ reports });
+  return;
+};
+
+router.get("/user/:userID", getAllByUser);
+
 export default router;

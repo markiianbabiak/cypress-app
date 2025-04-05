@@ -47,4 +47,10 @@ export class ReportService {
       this.http.post<CityReport>('report/' + id, cityReport)
     ).catch(() => undefined);
   }
+
+  async delete(id: string): Promise<CityReport | undefined> {
+    return lastValueFrom(this.http.delete<CityReport>('report/' + id)).then(
+      (deletedPost) => deletedPost ?? ({} as CityReport)
+    );
+  }
 }

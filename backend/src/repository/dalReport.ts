@@ -40,11 +40,21 @@ export const update = async (
   }
 };
 
+export const deleteReport = async (reportID: string) => {
+  try {
+    const savedReport = await Report.deleteOne({ reportID: reportID });
+    return savedReport;
+  } catch (err) {
+    throw new Error(JSON.stringify(err, null, " "));
+  }
+};
+
 const dalReport = {
   create,
   getAllActive,
   getAllByUser,
   update,
+  deleteReport,
 };
 
 export default dalReport;

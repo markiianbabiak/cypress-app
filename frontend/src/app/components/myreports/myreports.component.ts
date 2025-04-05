@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { UserService } from '../../services/user.service';
 import { AuthUser } from '../../models/user';
 import { EditReportModalComponent } from '../edit-report-modal/edit-report-modal.component';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-myreports',
@@ -95,6 +96,32 @@ export class MyreportsComponent {
           this.initializeTable();
         }
       }
+    });
+  }
+
+  deleteReport(row) {
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      width: '400px',
+      data: {
+        handleConfirm: async () => {
+          this.reportService.delete(row.reportID);
+          if (this.user) {
+            const results = await this.reportService.getByUser(
+              this.user.userID
+            );
+            if (!results) {
+              console.error('No report loaded');
+              return;
+            }
+            this.reports = results['reports'];
+            if (this.reports) {
+              this.dataSource = new MyReportsDataSource(this.reports);
+              this.cdr.detectChanges();
+              this.initializeTable();
+            }
+          }
+        },
+      },
     });
   }
 

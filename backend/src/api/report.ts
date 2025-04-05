@@ -56,4 +56,17 @@ const updateReportHandler: RequestHandler = async (
 
 router.post("/:reportID", updateReportHandler);
 
+const deleteReportHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const reportID: string = req.params.reportID;
+  const savedReport = await dalReport.deleteReport(reportID);
+
+  res.status(200).send({ savedReport });
+  return;
+};
+
+router.delete("/:reportID", deleteReportHandler);
+
 export default router;

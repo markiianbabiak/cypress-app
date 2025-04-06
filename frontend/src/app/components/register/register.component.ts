@@ -4,7 +4,7 @@ import User, { Role } from '../../models/user';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from '../../utils/ErrorStateMatcher';
 import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { generateUniqueID } from '../../utils/Utils';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
@@ -25,6 +25,7 @@ enum Step {
     ReactiveFormsModule,
     CommonModule,
     FormsModule,
+    RouterModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',

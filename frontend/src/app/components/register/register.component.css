@@ -1,11 +1,11 @@
 .select-box {
   width: 170px;
   height: 170px;
-  background-color: #f4f4f4;
+  background-color: white;
   border-radius: 50px;
   padding-bottom: 5px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   flex-direction: column;
   border: 5px solid #f4f4f4;
   z-index: 99999;
@@ -24,7 +24,7 @@
 }
 
 .active {
-  border: 5px solid #6c63ff;
+  border: 5px solid darkblue;
 }
 
 .enabled {
@@ -101,4 +101,12 @@ mat-form-field input {
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
+}
+
+img{
+  max-height: 100px;
+  margin-top: 10px;
+}
+.title{
+  margin: 0;
 }

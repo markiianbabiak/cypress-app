@@ -11,6 +11,10 @@ export interface TokenResponse {
   user: AuthUser;
 }
 
+export interface UserUpdate {
+  savedUser: AuthUser;
+}
+
 export enum Role {
   ADMIN = 'ADMIN',
   USER = 'USER',

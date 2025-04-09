@@ -33,6 +33,10 @@ export class ToolbarMenuComponent implements OnInit {
     this.router.navigate(['/myreports']);
   }
 
+  gotoSettings(): void {
+    this.router.navigate(['/settings']);
+  }
+
   async logout(): Promise<void> {
     await this.userService.logout();
     this.router.navigate(['/login']);

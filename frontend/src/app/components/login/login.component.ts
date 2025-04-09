@@ -44,7 +44,6 @@ export class LoginComponent {
     this.userService
       .login(this.email, this.password)
       .then(async () => {
-        console.log('here');
         this.invalidCredentials = false;
         const redirectUrl = this.userService.redirectUrl;
         this.userService.redirectUrl = null;

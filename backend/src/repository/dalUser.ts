@@ -61,7 +61,10 @@ export const create = async (user: UserModel) => {
 
 export const update = async (id: string, user: Partial<UserModel>) => {
   try {
-    const updated = await User.findOneAndUpdate({ userID: id }, user);
+    const updated = await User.findOneAndUpdate({ userID: id }, user, {
+      new: true,
+    });
+    console.log(updated);
     return updated;
   } catch (err) {
     throw new Error(JSON.stringify(err, null, " "));
@@ -93,8 +96,8 @@ export const updatePassword = async (
       { userID },
       {
         password: hashedPassword,
-        resetPasswordToken: null, // Clear the token
-        resetPasswordExpires: null, // Clear the expiration
+        // resetPasswordToken: null, // Clear the token
+        // resetPasswordExpires: null, // Clear the expiration
       },
       { new: true } // Return the updated document
     );

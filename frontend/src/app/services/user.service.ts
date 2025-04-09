@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import User, { AuthUser, TokenResponse } from '../models/user';
+import User, { AuthUser, TokenResponse, UserUpdate } from '../models/user';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable({
@@ -54,7 +54,19 @@ export class UserService {
   }
 
   async update(id: string, user: Partial<User>): Promise<void> {
-    await lastValueFrom(this.http.post('auth/' + id, user));
+    const result = await lastValueFrom(
+      this.http.post<UserUpdate>('auth/' + id, user)
+    );
+    localStorage.removeItem('user');
+    localStorage.setItem('user', JSON.stringify(result.savedUser));
+  }
+
+  async checkPassword(id: string, password: string): Promise<boolean> {
+    const result = await lastValueFrom(
+      this.http.post<boolean>('auth/checkPassword/' + id, { password })
+    );
+
+    return result;
   }
 
   async delete(id: string): Promise<void> {

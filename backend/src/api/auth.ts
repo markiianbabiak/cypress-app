@@ -3,6 +3,7 @@ import dalUser from "../repository/dalUser";
 import bcrypt from "bcrypt";
 import { addHours, getJWTSecret, userToToken } from "../utils/auth";
 import { sign, verify } from "jsonwebtoken";
+import { UserModel } from "../models/User";
 
 const router = Router();
 
@@ -62,4 +63,45 @@ const registerHandler: RequestHandler = async (
 };
 
 router.post("/register", registerHandler);
+
+const updateHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const userID = req.params.userID;
+  const user: Partial<UserModel> = req.body;
+
+  console.log(user.password);
+  if (user.password) {
+    console.log(user.password);
+    const savedUser = await dalUser.updatePassword(userID, user.password);
+    res.status(200).send({ savedUser });
+  } else {
+    const savedUser = await dalUser.update(userID, user);
+    res.status(200).send({ savedUser });
+  }
+};
+router.post("/:userID", updateHandler);
+
+const passwordCheckHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const userID = req.params.userID;
+  const { password } = req.body;
+
+  const foundUser = await dalUser.findByUserID(userID);
+
+  const isValidPassword =
+    foundUser && (await bcrypt.compare(password, foundUser.password));
+  if (!isValidPassword) {
+    res.status(403).end("Invalid password. Please try again.");
+    return;
+  } else {
+    res.status(200).send(true);
+  }
+};
+
+router.post("/checkPassword/:userID", passwordCheckHandler);
+
 export default router;

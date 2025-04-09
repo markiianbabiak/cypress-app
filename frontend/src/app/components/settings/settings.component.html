@@ -1,1 +1,204 @@
-<p>settings works!</p>
+<app-view-navigation></app-view-navigation>
+<div class="settings-container">
+  <h2 class="settings-header">Settings</h2>
+  <div class="settings-section">
+    <div class="settings-item">
+      <div class="settings-item-info">
+        <h3 class="settings-item-title">Name</h3>
+        <p *ngIf="!this.nameEditing" class="settings-item-description">
+          {{ this.user?.username }}
+        </p>
+        <form
+          style="margin: 20px"
+          *ngIf="this.nameEditing"
+          (ngSubmit)="onChangeUsername()"
+        >
+          <mat-form-field appearance="fill">
+            <mat-label>Display Name</mat-label>
+            <input
+              [formControl]="usernameControl"
+              [errorStateMatcher]="matcher"
+              matInput
+              [(ngModel)]="username"
+            />
+            <mat-hint
+              *ngIf="!username || username.length < 1 || username.length > 25"
+              >Display Name is required (1-25 characters)</mat-hint
+            >
+          </mat-form-field>
+          <button
+            style="margin-left: 10px"
+            class="settings-item-action"
+            type="submit"
+            [ngClass]="!usernameControl.valid ? 'disabled' : 'enabled'"
+            [disabled]="!usernameControl.valid"
+            mat-button
+          >
+            Submit
+          </button>
+          <button
+            style="margin-left: 10px; background-color: lightgrey"
+            class="settings-item-action"
+            type="button"
+            (click)="disableChangingUsername()"
+            mat-button
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+      <button
+        *ngIf="!this.nameEditing"
+        class="settings-item-action"
+        (click)="enableChangingUsername()"
+      >
+        Edit
+      </button>
+    </div>
+    <div class="settings-item">
+      <div class="settings-item-info">
+        <h3 class="settings-item-title">Email</h3>
+        <p *ngIf="!this.emailEditing" class="settings-item-description">
+          {{ this.user?.email }}
+        </p>
+        <form
+          style="margin: 20px"
+          *ngIf="this.emailEditing"
+          (ngSubmit)="onChangeEmail()"
+        >
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input
+              [formControl]="emailControl"
+              [errorStateMatcher]="matcher"
+              matInput
+              [(ngModel)]="email"
+            />
+            <mat-hint *ngIf="!email">Valid email is required</mat-hint>
+          </mat-form-field>
+          <button
+            style="margin-left: 10px"
+            class="settings-item-action"
+            type="submit"
+            [ngClass]="!emailControl.valid ? 'disabled' : 'enabled'"
+            [disabled]="!emailControl.valid"
+            mat-button
+          >
+            Submit
+          </button>
+          <button
+            style="margin-left: 10px; background-color: lightgrey"
+            class="settings-item-action"
+            type="button"
+            (click)="disableChangingEmail()"
+            mat-button
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+      <button
+        *ngIf="!this.emailEditing"
+        class="settings-item-action"
+        (click)="enableChangingEmail()"
+      >
+        Edit
+      </button>
+    </div>
+    <div class="settings-item">
+      <div class="settings-item-info">
+        <h3 class="settings-item-title">Password</h3>
+        <p *ngIf="!this.passwordEditing" class="settings-item-description">
+          ********
+        </p>
+        <form
+          class="passwords-form"
+          *ngIf="this.passwordEditing"
+          (ngSubmit)="onChangePassword()"
+        >
+          <mat-form-field
+            class="password-form-item"
+            style="margin-bottom: 0"
+            appearance="fill"
+          >
+            <mat-label>Current Password</mat-label>
+            <input
+              matInput
+              autocomplete="current-password"
+              type="password"
+              name="password"
+              [(ngModel)]="previousPassword"
+              required
+            />
+          </mat-form-field>
+          <mat-form-field class="password-form-item" appearance="fill">
+            <mat-label>New Password</mat-label>
+            <input
+              matInput
+              autocomplete="new-password"
+              [formControl]="passwordControl"
+              [errorStateMatcher]="matcher"
+              type="password"
+              name="password"
+              [(ngModel)]="password"
+              required
+            />
+            <mat-hint
+              *ngIf="!password || password.length < 12 || password.length > 30"
+              >Password is required (12-30 characters)</mat-hint
+            >
+          </mat-form-field>
+          <mat-form-field class="password-form-item" appearance="fill">
+            <mat-label>Confirm new Password</mat-label>
+            <input
+              autocomplete="new-password"
+              type="password"
+              matInput
+              [(ngModel)]="passwordRepeat"
+              name="password"
+              required
+            />
+            <mat-hint *ngIf="this.password != this.passwordRepeat"
+              >Passwords have to match</mat-hint
+            >
+          </mat-form-field>
+          <p *ngIf="invalidCredentials">Invalid password!</p>
+          <div style="display: flex; flex-direction: row">
+            <button
+              style="margin-left: 10px"
+              class="settings-item-action"
+              type="submit"
+              [ngClass]="
+                passwordControl.valid && password == passwordRepeat
+                  ? 'enabled'
+                  : 'disabled'
+              "
+              [disabled]="
+                !(passwordControl.valid && this.password == this.passwordRepeat)
+              "
+              mat-button
+            >
+              Submit
+            </button>
+            <button
+              style="margin-left: 10px; background-color: lightgrey"
+              class="settings-item-action"
+              type="button"
+              (click)="disableChangingPassword()"
+              mat-button
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+      <button
+        class="settings-item-action"
+        *ngIf="!this.passwordEditing"
+        (click)="enableChangingPassword()"
+      >
+        Edit
+      </button>
+    </div>
+  </div>
+</div>

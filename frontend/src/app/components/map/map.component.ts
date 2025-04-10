@@ -18,7 +18,7 @@ import { CreateReportModalComponent } from '../create-report-modal/create-report
 import { ReportService } from '../../services/report.service';
 import CityReport, { ReportType } from '../../models/cityReport';
 import { MatButtonModule } from '@angular/material/button';
-import { AuthUser } from '../../models/user';
+import { AuthUser, Role } from '../../models/user';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -56,6 +56,8 @@ export class MapComponent implements OnInit {
   marker!: google.maps.marker.AdvancedMarkerElement | null; // Nullable marker
 
   reports: CityReport[] | undefined;
+
+  Role: typeof Role = Role;
 
   constructor(
     private googleMapsService: GoogleMapsService,
@@ -200,10 +202,7 @@ export class MapComponent implements OnInit {
   }
 
   getAddress(event: Object) {
-    console.log(event);
     const place = event as google.maps.places.PlaceResult;
-
-    console.log(place);
 
     if (!place || !place.geometry) {
       console.error('Invalid place result:', place);
@@ -240,6 +239,10 @@ export class MapComponent implements OnInit {
       map: this.map,
       gmpClickable: true,
     });
+
+    if (this.user?.role == Role.ADMIN) {
+      return;
+    }
 
     const infoContent = document.createElement('div');
     infoContent.innerHTML = `<p><strong>Location: </strong>${this.selectedAddress()}</p><button id="createReportBtn">Create a report</button>`;

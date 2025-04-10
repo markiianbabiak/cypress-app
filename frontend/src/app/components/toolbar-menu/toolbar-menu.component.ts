@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { AuthUser } from '../../models/user';
+import { AuthUser, Role } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { Router, RouterModule } from '@angular/router';
 import { MatDividerModule } from '@angular/material/divider';
@@ -22,6 +22,7 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class ToolbarMenuComponent implements OnInit {
   @Input() user!: AuthUser;
+  Role: typeof Role = Role;
 
   constructor(private userService: UserService, private router: Router) {}
 

@@ -2,8 +2,17 @@
   <link rel="stylesheet" href="view-navigation.component.css" />
   <img src="assets/logo.svg" alt="" />
 
-  <a [routerLink]="['/']">Login</a> <a [routerLink]="['/map']">Map</a>
-  <a [routerLink]="['/register']">Register</a>
-  <a [routerLink]="['/reports']">Reports</a>
+  <a *ngIf="!loggedIn" [routerLink]="['/']">Login</a>
+  <a *ngIf="loggedIn" [routerLink]="['/map']">Map</a>
+  <a *ngIf="!loggedIn" [routerLink]="['/register']">Register</a>
+  <a *ngIf="loggedIn && user?.role == Role.USER" [routerLink]="['/reports']"
+    >Reports</a
+  >
+  <a
+    *ngIf="loggedIn && user?.role == Role.ADMIN"
+    [routerLink]="['/admin-reports']"
+    >Reports</a
+  >
+  <ng-content></ng-content>
   <app-toolbar-menu *ngIf="loggedIn" navbarMenu></app-toolbar-menu>
 </nav>

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import { AuthUser } from '../../models/user';
+import { AuthUser, Role } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,6 +22,7 @@ import { ToolbarMenuComponent } from '../toolbar-menu/toolbar-menu.component';
 export class ViewNavigationComponent {
   @Input() user: AuthUser | undefined;
   loggedIn!: boolean;
+  Role: typeof Role = Role;
 
   constructor(private userService: UserService, private router: Router) {}
 

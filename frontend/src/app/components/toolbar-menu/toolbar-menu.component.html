@@ -15,7 +15,11 @@
     <p style="margin: 4px 0; color: gray">{{ user.role }}</p>
   </div>
   <mat-divider></mat-divider>
-  <button mat-menu-item (click)="gotoMyReports()">
+  <button
+    *ngIf="user.role == Role.USER"
+    mat-menu-item
+    (click)="gotoMyReports()"
+  >
     <mat-icon>article</mat-icon>
     My Reports
   </button>

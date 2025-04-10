@@ -1,6 +1,6 @@
 <app-view-navigation
   ><button
-    *ngIf="mapClickListener == null"
+    *ngIf="mapClickListener == null && user?.role == Role.USER"
     mat-flat-button
     class="nav-button"
     color="primary"
@@ -9,7 +9,7 @@
     Select on the Map
   </button>
   <button
-    *ngIf="mapClickListener"
+    *ngIf="mapClickListener && user?.role == Role.USER"
     mat-stroked-button
     class="nav-cancel-button"
     (click)="disactivateMapClickListener()"

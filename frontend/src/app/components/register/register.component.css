@@ -28,7 +28,7 @@
 }
 
 .enabled {
-  background-color: #00408C;
+  background-color: #00408c;
   padding: 5px;
   color: white;
 }
@@ -36,34 +36,28 @@
 .disabled {
   background-color: #9a9aac;
 }
-.header{
+.header {
   text-align: center;
 }
-h2{
+h2 {
   text-align: center;
 }
 
-.form{
-  height: 85%;
-}
-
-.form{
+.form {
   text-align: center;
-    width: 500px;
-    height: 80%;
-    background-color: #f8f8f8;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 500px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-body{
-  background-color: #00408C;
+body {
+  background-color: #00408c;
   display: flex;
   justify-content: center;
-    height: 94%;
-    align-items: center;
-
+  height: 94%;
+  align-items: center;
 }
 
 .credentials-container {
@@ -103,10 +97,10 @@ mat-form-field input {
   border-radius: 5px;
 }
 
-img{
+img {
   max-height: 100px;
   margin-top: 10px;
 }
-.title{
+.title {
   margin: 0;
 }

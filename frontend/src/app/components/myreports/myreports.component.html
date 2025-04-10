@@ -45,7 +45,11 @@
           <button mat-icon-button (click)="viewReport(row)">
             <mat-icon>visibility</mat-icon>
           </button>
-          <button mat-icon-button (click)="editReport(row)">
+          <button
+            *ngIf="row.status == ReportStatus.PENDING"
+            mat-icon-button
+            (click)="editReport(row)"
+          >
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button (click)="deleteReport(row)">

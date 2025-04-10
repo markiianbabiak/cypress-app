@@ -9,7 +9,7 @@ import { MatTableModule, MatTable } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
 import { MyReportsDataSource } from './myreports-datasource';
-import CityReport, { ReportType } from '../../models/cityReport';
+import CityReport, { ReportStatus, ReportType } from '../../models/cityReport';
 import { ReportService } from '../../services/report.service';
 import { ViewNavigationComponent } from '../view-navigation/view-navigation.component';
 import { DataSource } from '@angular/cdk/collections';
@@ -46,6 +46,7 @@ export class MyreportsComponent {
   reports: CityReport[] | undefined;
   dataSource!: MyReportsDataSource;
   user: AuthUser | undefined;
+  ReportStatus: typeof ReportStatus = ReportStatus;
 
   constructor(
     private reportService: ReportService,

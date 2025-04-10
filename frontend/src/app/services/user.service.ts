@@ -12,9 +12,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   async getOneById(id: string): Promise<User> {
-    return lastValueFrom(
-      this.http.get<User>('auth/' + id, { headers: { cache: 'true' } })
-    );
+    return lastValueFrom(this.http.get<User>('auth/' + id));
   }
 
   async register(user: User): Promise<boolean> {

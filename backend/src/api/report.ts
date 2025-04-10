@@ -49,7 +49,6 @@ const updateReportHandler: RequestHandler = async (
   const report: Partial<ReportModel> = req.body;
   const reportID: string = req.params.reportID;
   const savedReport = await dalReport.update(reportID, report);
-
   res.status(200).send({ savedReport });
   return;
 };
@@ -68,5 +67,16 @@ const deleteReportHandler: RequestHandler = async (
 };
 
 router.delete("/:reportID", deleteReportHandler);
+
+const getAllHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const reports = await dalReport.getAll();
+
+  res.status(200).send(reports);
+};
+
+router.get("/all/", getAllHandler);
 
 export default router;

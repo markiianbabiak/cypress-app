@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>Review a Report</h1>
+<div mat-dialog-content>
+  <p><strong>Type:</strong> {{ reportType }}</p>
+  <p><strong>Description:</strong> {{ reportDescription }}</p>
+  <p><strong>Address:</strong> {{ data.location }}</p>
+  <mat-form-field appearance="outline" style="margin-top: 10px; width: 100%">
+    <mat-label>Report Status</mat-label>
+    <mat-select [(ngModel)]="reportStatus" required>
+      <mat-option [value]="ReportStatus.PENDING">Pending</mat-option>
+      <mat-option [value]="ReportStatus.IN_PROGRESS">In Progress</mat-option>
+      <mat-option [value]="ReportStatus.RESOLVED">Resolved</mat-option>
+      <mat-option [value]="ReportStatus.REFUSED">Refused</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <p><strong>Submitted At:</strong> {{ data.submittedAt }}</p>
+  <mat-form-field appearance="outline" style="margin-top: 10px; width: 100%">
+    <mat-label>Review Notes</mat-label>
+    <input matInput [(ngModel)]="reportReviewNotes" />
+  </mat-form-field>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button
+      mat-button
+      (click)="handleReviewReport()"
+      [disabled]="
+        this.reportStatus == this.data.status &&
+        this.reportReviewNotes == this.data.reportReviewNotes
+      "
+    >
+      Submit the Changes
+    </button>
+  </div>
+</div>

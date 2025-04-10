@@ -7,6 +7,7 @@ import { authGuard } from './guards/auth.guard';
 import { ReportsComponent } from './components/reports/reports.component';
 import { MyreportsComponent } from './components/myreports/myreports.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { AdminReportsComponent } from './components/admin-reports/admin-reports.component';
 
 const routeConfig: Routes = [
   { path: '', component: LoginComponent },
@@ -22,6 +23,11 @@ const routeConfig: Routes = [
   {
     path: 'settings',
     component: SettingsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin-reports',
+    component: AdminReportsComponent,
     canActivate: [authGuard],
   },
   { path: 'error', component: ErrorComponent },

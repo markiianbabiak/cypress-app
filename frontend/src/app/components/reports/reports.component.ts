@@ -55,10 +55,8 @@ export class ReportsComponent implements OnInit {
       return;
     }
     this.reports = results['reports'];
-    console.log(this.reports);
     if (this.reports) {
       this.dataSource = new ReportsDataSource(this.reports);
-      console.log(this.dataSource);
 
       // Trigger change detection to ensure ViewChild bindings are updated
       this.cdr.detectChanges();
@@ -89,10 +87,6 @@ export class ReportsComponent implements OnInit {
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.table.dataSource = this.dataSource;
-
-      console.log('Paginator:', this.paginator);
-      console.log('Sort:', this.sort);
-      console.log('DataSource Data:', this.dataSource.data); // Debugging
     } else {
       console.error('DataSource is still undefined after retrying.');
     }

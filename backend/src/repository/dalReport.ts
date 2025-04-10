@@ -33,7 +33,11 @@ export const update = async (
   report: Partial<ReportModel>
 ) => {
   try {
-    const savedReport = await Report.updateOne({ reportID: reportID }, report);
+    const savedReport = await Report.findOneAndUpdate(
+      { reportID: reportID },
+      report,
+      { new: true }
+    );
     return savedReport;
   } catch (err) {
     throw new Error(JSON.stringify(err, null, " "));
@@ -49,12 +53,22 @@ export const deleteReport = async (reportID: string) => {
   }
 };
 
+export const getAll = async () => {
+  try {
+    const reports = await Report.find();
+    return reports;
+  } catch (err) {
+    throw new Error(JSON.stringify(err, null, " "));
+  }
+};
+
 const dalReport = {
   create,
   getAllActive,
   getAllByUser,
   update,
   deleteReport,
+  getAll,
 };
 
 export default dalReport;

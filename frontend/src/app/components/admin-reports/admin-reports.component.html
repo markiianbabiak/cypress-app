@@ -1,0 +1,71 @@
+<app-view-navigation></app-view-navigation>
+<div *ngIf="reports" class="mat-elevation-z2">
+  <table mat-table class="full-width-table" matSort aria-label="Elements">
+    <!-- Id Column -->
+    <ng-container matColumnDef="reportID">
+      <th mat-header-cell *matHeaderCellDef>Id</th>
+      <td mat-cell *matCellDef="let row">{{ row.reportID }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="priority">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Priority</th>
+      <td mat-cell *matCellDef="let row">{{ row.priority }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef>Location</th>
+      <td mat-cell *matCellDef="let row">{{ row.location }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="submittedAt">
+      <th mat-header-cell *matHeaderCellDef>Submitted At</th>
+      <td mat-cell *matCellDef="let row">{{ row.submittedAt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <div class="action-buttons">
+          <button mat-icon-button (click)="viewReport(row)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button (click)="reviewReport(row)">
+            <mat-icon>note_alt</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteReport(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    #paginator
+    [length]="dataSource.data.length"
+    [pageIndex]="0"
+    [pageSize]="12"
+    [pageSizeOptions]="[5, 10, 12, 20]"
+    aria-label="Select page"
+  >
+  </mat-paginator>
+</div>

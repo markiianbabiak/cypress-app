@@ -37,5 +37,6 @@ export default class CityReport {
   location!: string;
   latitude!: number;
   longitude!: number;
+  reviewNotes?: string;
   submittedAt?: string;
 }

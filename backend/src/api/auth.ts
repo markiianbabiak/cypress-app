@@ -7,6 +7,22 @@ import { UserModel } from "../models/User";
 
 const router = Router();
 
+const getByUserIdHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const id = req.params.id;
+  const user = await dalUser.findByUserID(id);
+
+  if (!user) {
+    res.sendStatus(404);
+  }
+
+  res.status(200).send(user);
+};
+
+router.get("/:id", getByUserIdHandler);
+
 const loginHandler: RequestHandler = async (
   req: Request,
   res: Response
@@ -71,9 +87,7 @@ const updateHandler: RequestHandler = async (
   const userID = req.params.userID;
   const user: Partial<UserModel> = req.body;
 
-  console.log(user.password);
   if (user.password) {
-    console.log(user.password);
     const savedUser = await dalUser.updatePassword(userID, user.password);
     res.status(200).send({ savedUser });
   } else {

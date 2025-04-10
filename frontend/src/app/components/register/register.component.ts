@@ -10,6 +10,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
+import { ReportType } from '../../models/cityReport';
+import { MatSelectModule } from '@angular/material/select';
 
 enum Step {
   CHOOSE_TYPE,
@@ -26,6 +28,7 @@ enum Step {
     CommonModule,
     FormsModule,
     RouterModule,
+    MatSelectModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -35,8 +38,10 @@ export class RegisterComponent {
   email!: string;
   password!: string;
   role = Role.USER;
+  department: ReportType | undefined;
   Role: typeof Role = Role;
   step = Step.CHOOSE_TYPE;
+  ReportType: typeof ReportType = ReportType;
 
   usernameControl = new UntypedFormControl('', [
     Validators.required,
@@ -62,13 +67,24 @@ export class RegisterComponent {
   onRegister() {
     this.invalidCredentials = false;
 
-    const user: User = {
+    let user: User = {
       userID: generateUniqueID(),
       email: this.email,
       username: this.username,
       password: this.password,
       role: this.role,
     };
+
+    if (this.department) {
+      user = {
+        userID: generateUniqueID(),
+        email: this.email,
+        username: this.username,
+        password: this.password,
+        role: this.role,
+        department: this.department,
+      };
+    }
 
     this.userService
       .register(user)

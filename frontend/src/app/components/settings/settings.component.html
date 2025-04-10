@@ -200,5 +200,85 @@
         Edit
       </button>
     </div>
+    <div class="settings-item" *ngIf="this.user?.role == Role.ADMIN">
+      <div class="settings-item-info">
+        <h3 class="settings-item-title">Department</h3>
+        <p
+          *ngIf="!this.departmentEditing && this.user?.department"
+          class="settings-item-description"
+        >
+          {{ this.user?.department }}
+        </p>
+        <p
+          *ngIf="!this.departmentEditing && !this.user?.department"
+          class="settings-item-description"
+        >
+          No department assigned
+        </p>
+        <form
+          style="margin: 20px"
+          *ngIf="this.departmentEditing"
+          (ngSubmit)="onChangeDepartment()"
+        >
+          <mat-form-field
+            appearance="outline"
+            style="margin-top: 10px; width: 100%"
+          >
+            <mat-label>Department</mat-label>
+            <mat-select name="department" [(ngModel)]="department">
+              <mat-option [value]="ReportType.INFRUSTRUCTURE"
+                >Infrustructure Department</mat-option
+              >
+              <mat-option [value]="ReportType.WASTE_MANAGEMENT"
+                >Waste Management Department</mat-option
+              >
+              <mat-option [value]="ReportType.PUBLIC_SAFETY"
+                >Public Safety Department</mat-option
+              >
+              <mat-option [value]="ReportType.PUBLIC_UTILITIES_AND_SERVICES"
+                >Public Utilities and Services Department</mat-option
+              >
+              <mat-option [value]="ReportType.PUBLIC_SPACES_AND_PARKS"
+                >Public Spaces and Parks Department</mat-option
+              >
+              <mat-option [value]="ReportType.TRAFFIC_AND_TRANSPORTATION"
+                >Traffic and Transportation Department</mat-option
+              >
+              <mat-option [value]="ReportType.WEATHER_AND_NATURAL_DISASTERS"
+                >Weather or Natural Disasters Department</mat-option
+              >
+              <mat-option [value]="ReportType.ANIMAL_AND_WILDLIFE"
+                >Animal and Wildlife Department</mat-option
+              >
+              <mat-option [value]="null">General Manager</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button
+            style="margin-left: 10px"
+            class="settings-item-action"
+            type="submit"
+            mat-button
+          >
+            Submit
+          </button>
+          <button
+            style="margin-left: 10px; background-color: lightgrey"
+            class="settings-item-action"
+            type="button"
+            (click)="disableChangingDepartment()"
+            mat-button
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+      <button
+        *ngIf="!this.departmentEditing"
+        class="settings-item-action"
+        (click)="enableChangingDepartment()"
+      >
+        Edit
+      </button>
+    </div>
   </div>
 </div>

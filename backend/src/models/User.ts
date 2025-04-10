@@ -1,4 +1,5 @@
 import { prop, getModelForClass, modelOptions } from "@typegoose/typegoose";
+import { ReportType } from "./Report";
 
 export enum Role {
   ADMIN = "ADMIN",
@@ -22,11 +23,8 @@ export class UserModel {
   @prop({ type: () => String, enum: Role, required: true })
   public role!: Role;
 
-  @prop({ type: () => String })
-  public resetPasswordToken?: string;
-
-  @prop({ type: () => Date })
-  public resetPasswordExpires?: Date;
+  @prop({ type: () => String, enum: Role, required: false })
+  public department?: ReportType | null;
 }
 
 export default getModelForClass(UserModel);

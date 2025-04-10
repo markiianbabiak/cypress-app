@@ -5,6 +5,7 @@ export interface Token {
   username: string;
   userID: string;
   role: string;
+  department: string | undefined | null;
 }
 
 export const userToToken = (user: UserModel): Token => {
@@ -13,6 +14,7 @@ export const userToToken = (user: UserModel): Token => {
     username: user.username,
     userID: user.userID,
     role: user.role,
+    department: user.department,
   };
 };
 

@@ -17,7 +17,6 @@
             <img src="assets/user.png" />
           </div>
           <h1 class="title">User</h1>
-
         </div>
         <div
           class="select-box"
@@ -76,6 +75,39 @@
           *ngIf="!password || password.length < 12 || password.length > 30"
           >Password is required (12-30 characters)</mat-hint
         >
+      </mat-form-field>
+      <mat-form-field
+        *ngIf="this.role == Role.ADMIN"
+        appearance="outline"
+        style="margin-top: 10px; width: 100%"
+      >
+        <mat-label>Department</mat-label>
+        <mat-select name="department" [(ngModel)]="department">
+          <mat-option [value]="ReportType.INFRUSTRUCTURE"
+            >Infrustructure Department</mat-option
+          >
+          <mat-option [value]="ReportType.WASTE_MANAGEMENT"
+            >Waste Management Department</mat-option
+          >
+          <mat-option [value]="ReportType.PUBLIC_SAFETY"
+            >Public Safety Department</mat-option
+          >
+          <mat-option [value]="ReportType.PUBLIC_UTILITIES_AND_SERVICES"
+            >Public Utilities and Services Department</mat-option
+          >
+          <mat-option [value]="ReportType.PUBLIC_SPACES_AND_PARKS"
+            >Public Spaces and Parks Department</mat-option
+          >
+          <mat-option [value]="ReportType.TRAFFIC_AND_TRANSPORTATION"
+            >Traffic and Transportation Department</mat-option
+          >
+          <mat-option [value]="ReportType.WEATHER_AND_NATURAL_DISASTERS"
+            >Weather or Natural Disasters Department</mat-option
+          >
+          <mat-option [value]="ReportType.ANIMAL_AND_WILDLIFE"
+            >Animal and Wildlife Department</mat-option
+          >
+        </mat-select>
       </mat-form-field>
       <p *ngIf="emailExists" class="invalid-pass">Email already in use.</p>
       <p *ngIf="invalidCredentials && !emailExists" class="invalid-pass">

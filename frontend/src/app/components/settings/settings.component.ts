@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewNavigationComponent } from '../view-navigation/view-navigation.component';
 import { UserService } from '../../services/user.service';
-import User, { AuthUser } from '../../models/user';
+import User, { AuthUser, Role } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import {
   FormsModule,
@@ -12,6 +12,8 @@ import {
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MyErrorStateMatcher } from '../../utils/ErrorStateMatcher';
 import { MatInputModule } from '@angular/material/input';
+import { ReportType } from '../../models/cityReport';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-settings',
@@ -22,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatSelectModule,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
@@ -36,8 +39,12 @@ export class SettingsComponent implements OnInit {
   previousPassword: string | undefined;
   password: string | undefined;
   passwordRepeat: string | undefined;
+  department: ReportType | undefined | null;
+  departmentEditing: boolean = false;
   updatedUser!: Partial<User>;
   invalidCredentials = false;
+  Role: typeof Role = Role;
+  ReportType: typeof ReportType = ReportType;
 
   matcher = new MyErrorStateMatcher();
 
@@ -61,6 +68,9 @@ export class SettingsComponent implements OnInit {
     this.user = this.userService.user!;
     this.username = this.user.username;
     this.email = this.user.email;
+    if (this.user.department) {
+      this.department = this.user.department;
+    }
   }
 
   enableChangingUsername() {
@@ -90,6 +100,19 @@ export class SettingsComponent implements OnInit {
     this.password = '';
     this.passwordRepeat = '';
     this.previousPassword = '';
+  }
+
+  enableChangingDepartment() {
+    this.departmentEditing = true;
+  }
+
+  disableChangingDepartment() {
+    this.departmentEditing = false;
+    if (this.user?.department) {
+      this.department = this.user?.department;
+    } else {
+      this.department = undefined;
+    }
   }
 
   async onChangeUsername() {
@@ -135,5 +158,16 @@ export class SettingsComponent implements OnInit {
         this.passwordRepeat = '';
       }
     }
+  }
+
+  async onChangeDepartment() {
+    const updatedUser: Partial<User> = {
+      department: this.department,
+    };
+    if (this.user) {
+      await this.userService.update(this.user.userID, updatedUser);
+      this.user = this.userService.user!;
+    }
+    this.departmentEditing = false;
   }
 }

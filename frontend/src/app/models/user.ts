@@ -1,8 +1,11 @@
+import { ReportType } from './cityReport';
+
 export interface AuthUser {
   userID: string;
   email: string;
   username: string;
   role: string;
+  department: ReportType | undefined;
 }
 
 export interface TokenResponse {
@@ -26,8 +29,5 @@ export default class User {
   password!: string;
   username!: string;
   role!: Role;
-}
-
-export class Admin extends User {
-  department!: string;
+  department?: ReportType | null;
 }

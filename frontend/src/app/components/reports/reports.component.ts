@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ViewReportModalComponent } from '../view-report-modal/view-report-modal.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-reports',
@@ -42,13 +43,44 @@ export class ReportsComponent implements OnInit {
   reports: CityReport[] | undefined;
   dataSource!: ReportsDataSource;
 
+  displayedColumns: string[] = [
+    'reportID',
+    'name',
+    'type',
+    'status',
+    'priority',
+    'location',
+    'submittedAt',
+    'actions',
+  ];
+
   constructor(
     private reportService: ReportService,
     private cdr: ChangeDetectorRef,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.breakpointObserver
+      .observe([Breakpoints.Handset])
+      .subscribe((result) => {
+        if (result.matches) {
+          this.displayedColumns = ['name', 'actions'];
+        } else {
+          this.displayedColumns = [
+            'reportID',
+            'name',
+            'type',
+            'status',
+            'priority',
+            'location',
+            'submittedAt',
+            'actions',
+          ];
+        }
+      });
+
     const results = await this.reportService.getAllActive();
     if (!results) {
       console.error('No report loaded');
@@ -69,18 +101,6 @@ export class ReportsComponent implements OnInit {
       data: row,
     });
   }
-
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = [
-    'reportID',
-    'name',
-    'type',
-    'status',
-    'priority',
-    'location',
-    'submittedAt',
-    'actions',
-  ];
 
   private initializeTable(): void {
     if (this.dataSource) {

@@ -2,7 +2,7 @@
 <div *ngIf="reports" class="mat-elevation-z2">
   <table mat-table class="full-width-table" matSort aria-label="Elements">
     <!-- Id Column -->
-    <ng-container matColumnDef="reportID">
+    <ng-container matColumnDef="reportID" class="hide-on-small">
       <th mat-header-cell *matHeaderCellDef>Id</th>
       <td mat-cell *matCellDef="let row">{{ row.reportID }}</td>
     </ng-container>
@@ -13,27 +13,27 @@
       <td mat-cell *matCellDef="let row">{{ row.name }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="type">
+    <ng-container matColumnDef="type" class="hide-on-small">
       <th mat-header-cell *matHeaderCellDef>Type</th>
       <td mat-cell *matCellDef="let row">{{ row.type }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="status">
+    <ng-container matColumnDef="status" class="hide-on-small">
       <th mat-header-cell *matHeaderCellDef>Status</th>
       <td mat-cell *matCellDef="let row">{{ row.status }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="priority">
+    <ng-container matColumnDef="priority" class="hide-on-small">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Priority</th>
       <td mat-cell *matCellDef="let row">{{ row.priority }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="location">
+    <ng-container matColumnDef="location" class="hide-on-small">
       <th mat-header-cell *matHeaderCellDef>Location</th>
       <td mat-cell *matCellDef="let row">{{ row.location }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="submittedAt">
+    <ng-container matColumnDef="submittedAt" class="hide-on-small">
       <th mat-header-cell *matHeaderCellDef>Submitted At</th>
       <td mat-cell *matCellDef="let row">{{ row.submittedAt }}</td>
     </ng-container>

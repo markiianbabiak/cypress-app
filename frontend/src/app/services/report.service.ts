@@ -1,7 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import CityReport from '../models/cityReport';
+import CityReport, { ReportStatus } from '../models/cityReport';
 import { last, lastValueFrom, Observable } from 'rxjs';
+
+interface SendEmail {
+  email: string;
+  subject: string;
+  reportStatus: ReportStatus;
+  reviewNotes: string;
+  owner: boolean;
+  title: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -46,6 +55,36 @@ export class ReportService {
     return lastValueFrom(
       this.http.post<CityReport>('report/' + id, cityReport)
     ).catch(() => undefined);
+  }
+
+  async sendEmail(
+    email: string,
+    subject: string,
+    reportStatus: ReportStatus | undefined,
+    reviewNotes: string | undefined,
+    owner: boolean,
+    title: string
+  ): Promise<boolean> {
+    let emailData;
+    emailData = {
+      email,
+      subject,
+      reportStatus,
+      reviewNotes,
+      owner,
+      title,
+    };
+    console.log('Sending email data:', emailData);
+    return lastValueFrom(
+      this.http.post<{ success: boolean }>('report/sendUpdate/', emailData)
+    )
+      .then((result) => {
+        if (result) {
+          console.log('email sent successfully');
+        }
+        return true;
+      })
+      .catch(() => false);
   }
 
   async delete(id: string): Promise<CityReport | undefined> {

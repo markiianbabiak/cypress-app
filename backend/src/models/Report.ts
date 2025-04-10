@@ -60,6 +60,9 @@ export class ReportModel {
   @prop({ type: () => Number, required: true })
   public longitude!: number;
 
+  @prop({ type: () => String, required: false })
+  public reviewNotes?: string;
+
   @prop({ type: () => Date })
   public submittedAt!: Date;
 }

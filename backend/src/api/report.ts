@@ -1,8 +1,55 @@
 import { RequestHandler, Router, Request, Response } from "express";
-import { ReportModel } from "../models/Report";
+import { ReportModel, ReportStatus } from "../models/Report";
 import dalReport from "../repository/dalReport";
+import { generateEmail } from "../utils/emails";
 
 const router = Router();
+
+interface sendEmail {
+  email: string;
+  subject: string;
+  reportStatus: ReportStatus | undefined;
+  reviewNotes: string | undefined;
+  owner: boolean;
+  title: string;
+}
+
+const sendEmailHandler: RequestHandler = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { email, subject, reportStatus, reviewNotes, owner, title } =
+    req.body as sendEmail;
+  if (
+    !email ||
+    !subject ||
+    !owner ||
+    !title ||
+    (!reportStatus && !reviewNotes)
+  ) {
+    res.status(400).send({ success: false });
+    return;
+  }
+  try {
+    await generateEmail(
+      email,
+      subject,
+      title,
+      reportStatus,
+      reviewNotes,
+      owner
+    );
+    res.status(200).send({
+      success: true,
+    });
+  } catch (err) {
+    res.status(500).send({
+      success: false,
+    });
+  }
+};
+
+router.post("/sendUpdate/", sendEmailHandler);
 
 const createReportHandler: RequestHandler = async (
   req: Request,

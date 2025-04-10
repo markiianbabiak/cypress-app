@@ -4,7 +4,7 @@ import { FilterQuery } from "mongoose";
 
 export const findByUserID = async (userID: string) => {
   try {
-    const user: UserModel | null = await User.findOne({ userID });
+    const user: UserModel | null = await User.findOne({ userID: userID });
     return user;
   } catch (err) {
     throw new Error(JSON.stringify(err, null, " "));
@@ -64,7 +64,6 @@ export const update = async (id: string, user: Partial<UserModel>) => {
     const updated = await User.findOneAndUpdate({ userID: id }, user, {
       new: true,
     });
-    console.log(updated);
     return updated;
   } catch (err) {
     throw new Error(JSON.stringify(err, null, " "));

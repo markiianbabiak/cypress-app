@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ViewNavigationComponent } from '../view-navigation/view-navigation.component';
 import { UserService } from '../../services/user.service';
 import { MyErrorStateMatcher } from '../../utils/ErrorStateMatcher';
@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     CommonModule,
     FormsModule,
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',

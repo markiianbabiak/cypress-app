@@ -83,3 +83,7 @@ p {
   background-attachment: fixed;
   background-position: center;
 }
+
+.alternate {
+  text-align: center;
+}

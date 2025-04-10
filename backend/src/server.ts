@@ -7,6 +7,7 @@ import auth from "./api/auth";
 import mongoose from "mongoose";
 import maps from "./api/maps";
 import report from "./api/report";
+import subscription from "./api/subscription";
 
 const port = 8001;
 
@@ -23,6 +24,7 @@ const server = http.createServer(app);
 app.use("/api/auth", auth);
 app.use("/api/maps", maps);
 app.use("/api/report", report);
+app.use("/api/subscription", subscription);
 
 mongoose
   .connect(dbURI)

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewNavigationComponent } from '../view-navigation/view-navigation.component';
 import { UserService } from '../../services/user.service';
-import User, { AuthUser, Role } from '../../models/user';
+import User, { AuthUser, Role, Subscription } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import {
   FormsModule,
@@ -14,6 +14,9 @@ import { MyErrorStateMatcher } from '../../utils/ErrorStateMatcher';
 import { MatInputModule } from '@angular/material/input';
 import { ReportType } from '../../models/cityReport';
 import { MatSelectModule } from '@angular/material/select';
+import { AutocompleteInputComponent } from '../autocomplete-input/autocomplete-input.component';
+import { generateUniqueID } from '../../utils/Utils';
+import { GoogleMapsService } from '../../services/google-maps.service';
 
 @Component({
   selector: 'app-settings',
@@ -25,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
+    AutocompleteInputComponent,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
@@ -43,12 +47,20 @@ export class SettingsComponent implements OnInit {
   departmentEditing: boolean = false;
   updatedUser!: Partial<User>;
   invalidCredentials = false;
+  subscriptionAddress: string | null = '';
+  subscriptionRange: number = 0;
+  subscriptionLatitude: number = 0;
+  subscriptionLongitude: number = 0;
+  subscriptionEditing: boolean = false;
   Role: typeof Role = Role;
   ReportType: typeof ReportType = ReportType;
 
   matcher = new MyErrorStateMatcher();
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private googleMapsService: GoogleMapsService
+  ) {}
 
   usernameControl = new UntypedFormControl('', [
     Validators.required,
@@ -71,6 +83,9 @@ export class SettingsComponent implements OnInit {
     if (this.user.department) {
       this.department = this.user.department;
     }
+    await this.googleMapsService.loadScript().catch((error) => {
+      console.error('Error loading Google Maps script', error);
+    });
   }
 
   enableChangingUsername() {
@@ -112,6 +127,35 @@ export class SettingsComponent implements OnInit {
       this.department = this.user?.department;
     } else {
       this.department = undefined;
+    }
+  }
+
+  enableChangingSubscription() {
+    this.subscriptionEditing = true;
+  }
+
+  disableChangingSubscription() {
+    this.subscriptionEditing = false;
+    this.subscriptionAddress = '';
+    this.subscriptionRange = 0;
+  }
+
+  getAddress(event: any) {
+    const place = event as google.maps.places.PlaceResult;
+
+    if (!place || !place.geometry) {
+      console.error('Invalid place result:', place);
+      return;
+    }
+
+    const formattedAddress = place.formatted_address ?? null;
+    this.subscriptionAddress = formattedAddress;
+
+    const location = place.geometry.location;
+
+    if (location) {
+      this.subscriptionLongitude = location.lng();
+      this.subscriptionLatitude = location.lat();
     }
   }
 
@@ -169,5 +213,31 @@ export class SettingsComponent implements OnInit {
       this.user = this.userService.user!;
     }
     this.departmentEditing = false;
+  }
+
+  async onSubscribeToUpdates() {
+    if (!this.subscriptionAddress || !this.subscriptionRange) {
+      alert('Please provide a valid address and range.');
+      return;
+    }
+
+    if (this.user) {
+      const subscription: Subscription = {
+        subscriptionID: generateUniqueID(),
+        userID: this.user?.userID,
+        address: this.subscriptionAddress,
+        latitude: this.subscriptionLatitude,
+        longitude: this.subscriptionLongitude,
+        range: this.subscriptionRange,
+      };
+
+      try {
+        await this.userService.subscribeToUpdates(subscription);
+        alert('Subscription added successfully!');
+        this.disableChangingSubscription();
+      } catch (error) {
+        console.error('Error subscribing to updates:', error);
+      }
+    }
   }
 }

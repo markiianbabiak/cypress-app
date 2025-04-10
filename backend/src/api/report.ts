@@ -1,7 +1,10 @@
 import { RequestHandler, Router, Request, Response } from "express";
 import { ReportModel, ReportStatus } from "../models/Report";
 import dalReport from "../repository/dalReport";
-import { generateEmail } from "../utils/emails";
+import { generateEmail, generateNewReportEmail } from "../utils/emails";
+import Subscription from "../models/Subscription";
+import { haversineDistance } from "../utils/report";
+import dalUser from "../repository/dalUser";
 
 const router = Router();
 
@@ -57,6 +60,25 @@ const createReportHandler: RequestHandler = async (
 ): Promise<void> => {
   const report: ReportModel = req.body;
   const savedReport = await dalReport.create(report);
+
+  const subscriptions = await Subscription.find();
+  subscriptions.forEach(async (sub) => {
+    const distance = haversineDistance(
+      { lat: sub.latitude, lng: sub.longitude },
+      { lat: report.latitude, lng: report.longitude }
+    );
+    if (distance <= sub.range) {
+      const user = await dalUser.findByUserID(sub.userID);
+      if (user) {
+        await generateNewReportEmail(
+          user.email, // Replace with user email lookup
+          "New Report in Your Area",
+          report.name,
+          sub.range
+        );
+      }
+    }
+  });
 
   res.status(200).send({ savedReport });
   return;

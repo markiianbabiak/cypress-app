@@ -130,3 +130,44 @@ export const generateEmail = async (
     throw new Error("Failed to send email");
   }
 };
+
+export const generateNewReportEmail = async (
+  emailTo: string,
+  subject: string,
+  title: string,
+  range: number
+): Promise<void> => {
+  const message = `
+    <p>Hello from the Cypress app,</p>
+
+    <p>A new report(${title}) has been added within ${range} km of your subscription.</p>
+
+    <p>Thank you,</p>
+    <p>The Cypress App Team</p>
+  `;
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || "465"),
+    secure: true,
+    auth: {
+      user: process.env.SMTP_EMAIL,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.SMTP_EMAIL,
+    to: emailTo,
+    subject: subject,
+    html: message, // Use html instead of text
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: " + info.response);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw new Error("Failed to send email");
+  }
+};

@@ -280,5 +280,51 @@
         Edit
       </button>
     </div>
+    <div class="settings-item">
+      <div class="settings-item-info">
+        <h3 class="settings-item-title">Subscribe to Report Updates</h3>
+        <form
+          *ngIf="this.subscriptionEditing"
+          (ngSubmit)="onSubscribeToUpdates()"
+        >
+          <mat-label>Address</mat-label>
+          <div
+            style="width: 80%; width: 400px; max-width: 90vw; margin-top: 10px"
+          >
+            <app-autocomplete-input
+              (setAddress)="getAddress($event)"
+            ></app-autocomplete-input>
+          </div>
+          <mat-form-field
+            appearance="outline"
+            style="margin-top: 10px; width: 100%"
+          >
+            <mat-label>Range (in km)</mat-label>
+            <input
+              matInput
+              type="number"
+              [(ngModel)]="subscriptionRange"
+              name="range"
+              required
+            />
+          </mat-form-field>
+          <button
+            style="margin-left: 10px"
+            class="settings-item-action"
+            type="submit"
+            mat-button
+          >
+            Subscribe
+          </button>
+        </form>
+      </div>
+      <button
+        *ngIf="!this.subscriptionEditing"
+        class="settings-item-action"
+        (click)="enableChangingSubscription()"
+      >
+        Edit
+      </button>
+    </div>
   </div>
 </div>

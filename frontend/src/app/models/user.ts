@@ -6,6 +6,16 @@ export interface AuthUser {
   username: string;
   role: string;
   department: ReportType | undefined;
+  subscriptionID: string | undefined;
+}
+
+export interface Subscription {
+  subscriptionID: string;
+  userID: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  range: number;
 }
 
 export interface TokenResponse {
@@ -30,4 +40,5 @@ export default class User {
   username!: string;
   role!: Role;
   department?: ReportType | null;
+  subscriptionID?: string | null;
 }

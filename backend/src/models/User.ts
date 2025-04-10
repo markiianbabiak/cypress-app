@@ -25,6 +25,9 @@ export class UserModel {
 
   @prop({ type: () => String, enum: Role, required: false })
   public department?: ReportType | null;
+
+  @prop({ type: () => String, required: false })
+  public subscriptionID?: String | null;
 }
 
 export default getModelForClass(UserModel);

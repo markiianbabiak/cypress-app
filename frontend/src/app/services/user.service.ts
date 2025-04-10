@@ -1,6 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import User, { AuthUser, TokenResponse, UserUpdate } from '../models/user';
+import User, {
+  AuthUser,
+  Subscription,
+  TokenResponse,
+  UserUpdate,
+} from '../models/user';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable({
@@ -65,6 +70,19 @@ export class UserService {
     );
 
     return result;
+  }
+
+  async subscribeToUpdates(subscription: Subscription) {
+    const newSubscription = await lastValueFrom(
+      this.http.post<Subscription>('subscription/', subscription)
+    );
+
+    const user: Partial<User> = {
+      subscriptionID: newSubscription.subscriptionID,
+    };
+    await this.update(newSubscription.userID, user);
+
+    return newSubscription;
   }
 
   async delete(id: string): Promise<void> {

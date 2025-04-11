@@ -23,7 +23,7 @@ export class UserModel {
   @prop({ type: () => String, enum: Role, required: true })
   public role!: Role;
 
-  @prop({ type: () => String, enum: Role, required: false })
+  @prop({ type: () => String, enum: ReportType, required: false })
   public department?: ReportType | null;
 
   @prop({ type: () => String, required: false })

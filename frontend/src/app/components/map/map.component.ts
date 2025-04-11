@@ -206,6 +206,7 @@ export class MapComponent implements OnInit {
 
     if (!place || !place.geometry) {
       console.error('Invalid place result:', place);
+      alert('Invalid address; Choose one from the list');
       return;
     }
 

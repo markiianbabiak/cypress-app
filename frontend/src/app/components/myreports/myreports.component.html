@@ -1,5 +1,5 @@
 <app-view-navigation></app-view-navigation>
-<div *ngIf="reports" class="mat-elevation-z2">
+<div *ngIf="reports && reports.length > 0" class="mat-elevation-z2">
   <table mat-table class="full-width-table" matSort aria-label="Elements">
     <!-- Id Column -->
     <ng-container matColumnDef="reportID">
@@ -77,3 +77,4 @@
   >
   </mat-paginator>
 </div>
+<h3 *ngIf="!reports || reports.length == 0">No Reports Submitted Yet</h3>

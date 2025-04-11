@@ -11,8 +11,20 @@ export const createSubscription = async (
   }
 };
 
+export const findBySubscriptionID = async (subscriptionID: string) => {
+  try {
+    const subscription: SubscriptionModel | null = await Subscription.findOne({
+      subscriptionID: subscriptionID,
+    });
+    return subscription;
+  } catch (err) {
+    throw new Error(JSON.stringify(err, null, " "));
+  }
+};
+
 const dalSubscription = {
   createSubscription,
+  findBySubscriptionID,
 };
 
 export default dalSubscription;

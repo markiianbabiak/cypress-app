@@ -329,7 +329,11 @@ export class MapComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
-        await this.reportService.create(result);
+        const creationResult = await this.reportService.create(result);
+        if (!creationResult) {
+          alert('This is a duplicate report!');
+          return;
+        }
         this.reports?.push(result);
         const position = { lat: result.latitude, lng: result.longitude };
 
@@ -384,6 +388,7 @@ export class MapComponent implements OnInit {
         if (this.mapClickListener) {
           this.disactivateMapClickListener();
         }
+        alert('Report created successfully!');
       }
     });
   }

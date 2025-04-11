@@ -23,13 +23,7 @@ const sendEmailHandler: RequestHandler = async (
 ): Promise<void> => {
   const { email, subject, reportStatus, reviewNotes, owner, title } =
     req.body as sendEmail;
-  if (
-    !email ||
-    !subject ||
-    !owner ||
-    !title ||
-    (!reportStatus && !reviewNotes)
-  ) {
+  if (!email || !subject || !title || (!reportStatus && !reviewNotes)) {
     res.status(400).send({ success: false });
     return;
   }
@@ -59,6 +53,14 @@ const createReportHandler: RequestHandler = async (
   res: Response
 ): Promise<void> => {
   const report: ReportModel = req.body;
+
+  const found = await dalReport.findDuplicate(report);
+
+  if (found) {
+    res.status(403).send(false);
+    return;
+  }
+
   const savedReport = await dalReport.create(report);
 
   const subscriptions = await Subscription.find();

@@ -62,7 +62,17 @@ export const getAll = async () => {
   }
 };
 
+export const findDuplicate = async (report: ReportModel) => {
+  const found = await Report.findOne({
+    location: report.location,
+    type: report.type,
+  });
+  console.log(found);
+  return found;
+};
+
 const dalReport = {
+  findDuplicate,
   create,
   getAllActive,
   getAllByUser,

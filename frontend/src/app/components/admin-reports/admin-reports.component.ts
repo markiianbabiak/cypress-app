@@ -24,6 +24,8 @@ import { EditReportModalComponent } from '../edit-report-modal/edit-report-modal
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 import { Router } from '@angular/router';
 import { ReviewReportModalComponent } from '../review-report-modal/review-report-modal.component';
+import { SubscriptionService } from '../../services/subscription.service';
+import { haversineDistance } from '../../utils/Utils';
 
 @Component({
   selector: 'app-admin-reports',
@@ -53,6 +55,7 @@ export class AdminReportsComponent {
     private reportService: ReportService,
     private cdr: ChangeDetectorRef,
     private userService: UserService,
+    private subscriptionService: SubscriptionService,
     private router: Router,
     public dialog: MatDialog
   ) {}
@@ -92,6 +95,7 @@ export class AdminReportsComponent {
 
     dialogRef.afterClosed().subscribe(async (result) => {
       let newReport = await this.reportService.update(row.reportID, result);
+
       this.reports = await this.reportService.getAll();
       if (this.reports) {
         this.dataSource = new AdminReportsDataSource(this.reports);
@@ -99,37 +103,81 @@ export class AdminReportsComponent {
         this.initializeTable();
       }
       if (newReport) {
-        newReport = newReport['savedReport'];
-        if (newReport) {
-          const owner = await this.userService.getOneById(newReport.userID);
+        const savedReport = newReport['savedReport'];
+        if (savedReport) {
+          const owner = await this.userService.getOneById(savedReport.userID);
           if (result.status && result.reviewNotes) {
             await this.reportService.sendEmail(
               owner.email,
               'Your Report In Cypress App Update',
-              newReport.status,
-              newReport.reviewNotes,
+              savedReport.status,
+              savedReport.reviewNotes,
               true,
-              newReport.name
+              savedReport.name
             );
           } else if (result.status) {
             await this.reportService.sendEmail(
               owner.email,
               'Your Report In Cypress App Update',
-              newReport.status,
+              savedReport.status,
               undefined,
               true,
-              newReport.name
+              savedReport.name
             );
           } else if (result.reviewNotes) {
             await this.reportService.sendEmail(
               owner.email,
               'Your Report In Cypress App Update',
               undefined,
-              newReport.reviewNotes,
+              savedReport.reviewNotes,
               true,
-              newReport.name
+              savedReport.name
             );
           }
+
+          const subscriptions = await this.subscriptionService.getAll();
+          subscriptions.forEach(async (sub) => {
+            if (sub.userID == savedReport.userID) {
+              return;
+            }
+            const distance = haversineDistance(
+              { lat: sub.latitude, lng: sub.longitude },
+              { lat: savedReport.latitude, lng: savedReport.longitude }
+            );
+            if (distance <= sub.range) {
+              const user = await this.userService.getOneById(sub.userID);
+              if (user) {
+                if (result.status && result.reviewNotes) {
+                  await this.reportService.sendEmail(
+                    user.email,
+                    'Report In Cypress App Update',
+                    savedReport.status,
+                    savedReport.reviewNotes,
+                    false,
+                    savedReport.name
+                  );
+                } else if (result.status) {
+                  await this.reportService.sendEmail(
+                    user.email,
+                    'Report In Cypress App Update',
+                    savedReport.status,
+                    undefined,
+                    false,
+                    savedReport.name
+                  );
+                } else if (result.reviewNotes) {
+                  await this.reportService.sendEmail(
+                    user.email,
+                    'Report In Cypress App Update',
+                    undefined,
+                    savedReport.reviewNotes,
+                    false,
+                    savedReport.name
+                  );
+                }
+              }
+            }
+          });
         }
       }
     });

@@ -52,7 +52,11 @@
           >
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button (click)="deleteReport(row)">
+          <button
+            *ngIf="row.status == ReportStatus.PENDING"
+            mat-icon-button
+            (click)="deleteReport(row)"
+          >
             <mat-icon>delete</mat-icon>
           </button>
         </div>

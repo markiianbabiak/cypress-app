@@ -17,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AutocompleteInputComponent } from '../autocomplete-input/autocomplete-input.component';
 import { generateUniqueID } from '../../utils/Utils';
 import { GoogleMapsService } from '../../services/google-maps.service';
+import { SubscriptionService } from '../../services/subscription.service';
 
 @Component({
   selector: 'app-settings',
@@ -47,6 +48,7 @@ export class SettingsComponent implements OnInit {
   departmentEditing: boolean = false;
   updatedUser!: Partial<User>;
   invalidCredentials = false;
+  subscription: Subscription | undefined = undefined;
   subscriptionAddress: string | null = '';
   subscriptionRange: number = 0;
   subscriptionLatitude: number = 0;
@@ -59,7 +61,8 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private googleMapsService: GoogleMapsService
+    private googleMapsService: GoogleMapsService,
+    private subscriptionService: SubscriptionService
   ) {}
 
   usernameControl = new UntypedFormControl('', [
@@ -86,6 +89,13 @@ export class SettingsComponent implements OnInit {
     await this.googleMapsService.loadScript().catch((error) => {
       console.error('Error loading Google Maps script', error);
     });
+    if (this.user.subscriptionID) {
+      this.subscription = await this.subscriptionService.getOneById(
+        this.user.subscriptionID
+      );
+      this.subscriptionAddress = this.subscription.address;
+      this.subscriptionRange = this.subscription.range;
+    }
   }
 
   enableChangingUsername() {
@@ -221,6 +231,10 @@ export class SettingsComponent implements OnInit {
       return;
     }
 
+    if (this.subscription) {
+      await this.userService.unsubscribeFromUpdates(this.subscription);
+    }
+
     if (this.user) {
       const subscription: Subscription = {
         subscriptionID: generateUniqueID(),
@@ -235,8 +249,31 @@ export class SettingsComponent implements OnInit {
         await this.userService.subscribeToUpdates(subscription);
         alert('Subscription added successfully!');
         this.disableChangingSubscription();
+        this.subscription = await this.subscriptionService.getOneById(
+          subscription.subscriptionID
+        );
       } catch (error) {
         console.error('Error subscribing to updates:', error);
+      }
+    }
+  }
+
+  async onUnsubscribeFromUpdates() {
+    console.log(this.user?.subscriptionID && this.subscription);
+    if (this.user?.subscriptionID && this.subscription) {
+      try {
+        const user: Partial<User> = {
+          subscriptionID: null,
+        };
+        await this.userService.update(this.subscription.userID, user);
+        await this.userService.unsubscribeFromUpdates(this.subscription);
+        alert('Unsubscribed successfully!');
+        this.disableChangingSubscription();
+        this.subscription = undefined;
+        this.subscriptionAddress = null;
+        this.subscriptionRange = 0;
+      } catch (error) {
+        console.error('Error unsubscribing from updates:', error);
       }
     }
   }

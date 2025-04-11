@@ -78,11 +78,18 @@ export class UserService {
     );
 
     const user: Partial<User> = {
-      subscriptionID: newSubscription.subscriptionID,
+      subscriptionID: subscription.subscriptionID,
     };
-    await this.update(newSubscription.userID, user);
+    await this.update(subscription.userID, user);
 
     return newSubscription;
+  }
+
+  async unsubscribeFromUpdates(subscription: Subscription) {
+    const result = await lastValueFrom(
+      this.http.delete('subscription/' + subscription.subscriptionID)
+    );
+    return result;
   }
 
   async delete(id: string): Promise<void> {

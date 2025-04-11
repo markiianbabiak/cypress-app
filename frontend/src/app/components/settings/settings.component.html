@@ -280,16 +280,27 @@
         Edit
       </button>
     </div>
-    <div class="settings-item">
+    <div class="settings-item" *ngIf="this.user?.role == Role.USER">
       <div class="settings-item-info">
         <h3 class="settings-item-title">Subscribe to Report Updates</h3>
+        <p *ngIf="!subscription" class="settings-item-description">
+          No subscription
+        </p>
+        <p *ngIf="subscription" class="settings-item-description">
+          Your Subscription: at {{ subscription.address }}, with range of
+          {{ subscription.range }}km.
+        </p>
         <form
           *ngIf="this.subscriptionEditing"
           (ngSubmit)="onSubscribeToUpdates()"
         >
-          <mat-label>Address</mat-label>
           <div
-            style="width: 80%; width: 400px; max-width: 90vw; margin-top: 10px"
+            style="
+              width: 80%;
+              max-width: 80vw;
+              margin-top: 10px;
+              margin-bottom: 10px;
+            "
           >
             <app-autocomplete-input
               (setAddress)="getAddress($event)"
@@ -315,6 +326,16 @@
             mat-button
           >
             Subscribe
+          </button>
+          <button
+            *ngIf="this.subscription"
+            style="margin-left: 10px"
+            class="settings-item-action"
+            type="button"
+            (click)="onUnsubscribeFromUpdates()"
+            mat-button
+          >
+            Delete
           </button>
         </form>
       </div>

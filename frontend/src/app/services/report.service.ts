@@ -43,9 +43,13 @@ export class ReportService {
   }
 
   async create(cityReport: CityReport): Promise<CityReport | undefined> {
-    return lastValueFrom(
+    const report = lastValueFrom(
       this.http.post<CityReport>('report/', cityReport)
     ).catch(() => undefined);
+    if (!report) {
+      return undefined;
+    }
+    return report;
   }
 
   async update(

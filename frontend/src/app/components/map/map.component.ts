@@ -210,7 +210,7 @@ export class MapComponent implements OnInit {
       return;
     }
 
-    const formattedAddress = place.formatted_address ?? null;
+    let formattedAddress = place.formatted_address ?? null;
     this.selectedAddress.set(formattedAddress);
 
     const location = place.geometry.location;
@@ -309,7 +309,11 @@ export class MapComponent implements OnInit {
       const geocoder = new google.maps.Geocoder();
       geocoder.geocode({ location: position }, (results, status) => {
         if (status === 'OK' && results && results[0]) {
-          resolve(results[0].formatted_address);
+          let formatted_address = results[0].formatted_address;
+          if (formatted_address.endsWith(', Canada')) {
+            formatted_address = formatted_address.replace(/, Canada$/, '');
+          }
+          resolve(formatted_address);
         } else {
           console.error('Geocoder failed due to:', status);
           resolve('Address not found');
